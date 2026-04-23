@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0057)file:///C:/Users/jessie.lozano/Downloads/index%20(4).html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PCTX Weekly Timesheet</title>
 <style>
@@ -150,11 +150,11 @@
     <div class="grid3" style="gap:14px;">
       <div class="field" style="grid-column: span 1;">
         <div class="lbl">Full Name</div>
-        <input type="text" id="empName" placeholder="Your full name" />
+        <input type="text" id="empName" placeholder="Your full name">
       </div>
       <div class="field">
         <div class="lbl">Week Ending (Sunday)</div>
-        <input type="date" id="weekEnding" />
+        <input type="date" id="weekEnding">
       </div>
       <div class="field">
         <div class="lbl">Supervisor / PM</div>
@@ -172,14 +172,95 @@
     <div class="section-label">📋 Billable Time</div>
     <button class="add-row-btn" onclick="addBillable()">+ Add Billable Row</button>
   </div>
-  <div id="billable-rows"></div>
+  <div id="billable-rows"><div class="row-card" id="card-b1">
+    <div class="row-card-hdr">
+      <div class="row-card-title">Billable Row 1</div>
+      <button class="del-btn" onclick="delRow(&#39;b1&#39;,&#39;b&#39;)">Remove</button>
+    </div>
+    <div class="row-fields">
+      <div class="field" style="grid-column: span 2;">
+        <div class="lbl">Project &amp; Task / SR #</div>
+        <input type="text" id="proj-b1" placeholder="e.g. 11908 FS">
+      </div>
+      <div class="field">
+    <div class="lbl">Customer</div>
+    <div class="cust-wrap">
+      <select class="cust-sel" id="csel-b1"><option value="">Select...</option><option>AG Equipment</option><option>Aspen Midstream</option><option>Blue Racer</option><option>Burns &amp; McDonnell</option><option>CPE</option><option>Calumet</option><option>Cemex</option><option>Cipher</option><option>Compass</option><option>Crosstex</option><option>DCP</option><option>Denbury</option><option>Devo</option><option>Devon Gas</option><option>Dominion</option><option>E&amp;I Sales</option><option>EMD</option><option>Easton Energy</option><option>Enbridge</option><option>Energy Transfer</option><option>Enlink</option><option>Enterprise</option><option>Epic</option><option>Evonik</option><option>Explorer</option><option>Exxon</option><option>Fuel Cell Energy</option><option>Goodnight Midstream</option><option>Gray Badger Midstream</option><option>Harvest</option><option>Honeywell</option><option>Howard Energy Partners</option><option>IC Spares</option><option>Jefferson Midstream</option><option>Kinder Morgan</option><option>Linde</option><option>Lonestar B&amp;C</option><option>M&amp;I Electric</option><option>Mark West</option><option>Matheson Gas</option><option>Mustang</option><option>NGL Energy Partners</option><option>Nu Star</option><option>OPD</option><option>Odfjell</option><option>Oneok</option><option>Oryx</option><option>Perdue Petroleum</option><option>Plains</option><option>Powell</option><option>Republic</option><option>Saber</option><option>San Antonio Armature</option><option>Saulsbury Industries</option><option>South Texas Electric COOP</option><option>Sulzer</option><option>Sunoco</option><option>T&amp;H LBC</option><option>Targa</option><option>Trinity Canyon</option><option>UOP Honeywell</option><option>White Water Midstream</option></select>
+      <button class="new-cust-btn" onclick="showNewCust(&#39;b1&#39;)">+ New</button>
+    </div>
+    <div class="new-cust-input-row" id="nci-b1">
+      <input type="text" placeholder="New customer name" id="ncin-b1" onkeydown="if(event.key===&#39;Enter&#39;)confirmNewCust(&#39;b1&#39;)">
+      <button class="cust-confirm" onclick="confirmNewCust(&#39;b1&#39;)">Add</button>
+      <button class="cust-cancel" onclick="cancelNewCust(&#39;b1&#39;)">✕</button>
+    </div>
+  </div>
+      <div class="field">
+        <div class="lbl">Site / Location</div>
+        <input type="text" id="site-b1" placeholder="e.g. Seaway II – Cushing">
+      </div>
+      <div class="field">
+        <div class="lbl">PM</div>
+        <select id="pm-b1"><option value="">Select...</option><option>Lozano</option><option>Nguyen</option><option>Prado</option><option>Sanchez</option><option>Valtierra</option><option>Walding</option><option>Catacoly</option></select>
+      </div>
+      <div class="field">
+        <div class="lbl">Type of Work</div>
+        <select id="type-b1"><option value="">Select...</option><option>JOB RELATED TRAVEL</option><option>ONSITE WORK</option><option>STANDBY TIME</option><option>SITE SPECIFIC TRAINING</option><option>JOB PREPARATION</option><option>OFFSITE BILLABLE TIME</option><option>REPORTING</option><option>ON JOB TRAINING</option><option>ON JOB TRAINING TRAVEL</option><option>Warranty</option><option>Warranty Travel</option></select>
+      </div>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-lbl">Toshiba SP Work?</span>
+      <label class="toggle"><input type="checkbox" id="tosh-b1"><span class="slider"></span></label>
+    </div>
+    <div class="days-section">
+    <div class="days-lbl">Hours Per Day</div>
+    <div class="days-grid">
+      <div class="day-col"><div class="day-name">Mon</div><input class="day-input" type="number" min="0" max="24" step="0.5" id="d-b1-Mon" onchange="calcRow(&#39;b1&#39;)"></div><div class="day-col"><div class="day-name">Tue</div><input class="day-input" type="number" min="0" max="24" step="0.5" id="d-b1-Tue" onchange="calcRow(&#39;b1&#39;)"></div><div class="day-col"><div class="day-name">Wed</div><input class="day-input" type="number" min="0" max="24" step="0.5" id="d-b1-Wed" onchange="calcRow(&#39;b1&#39;)"></div><div class="day-col"><div class="day-name">Thu</div><input class="day-input" type="number" min="0" max="24" step="0.5" id="d-b1-Thu" onchange="calcRow(&#39;b1&#39;)"></div><div class="day-col"><div class="day-name">Fri</div><input class="day-input" type="number" min="0" max="24" step="0.5" id="d-b1-Fri" onchange="calcRow(&#39;b1&#39;)"></div><div class="day-col"><div class="day-name">Sat</div><input class="day-input" type="number" min="0" max="24" step="0.5" id="d-b1-Sat" onchange="calcRow(&#39;b1&#39;)"></div><div class="day-col"><div class="day-name">Sun</div><input class="day-input" type="number" min="0" max="24" step="0.5" id="d-b1-Sun" onchange="calcRow(&#39;b1&#39;)"></div>
+    </div>
+    <div class="row-total"><span class="row-total-lbl">Row total:</span><span class="row-total-val" id="rt-b1">0.0 hrs</span></div>
+  </div>
+    <div class="perdiem-section">
+      <div class="perdiem-lbl">Per Diem</div>
+      <div class="grid2" style="max-width:400px;">
+        <div class="field"><div class="lbl">Offshore Days</div><input type="number" min="0" step="1" value="0" id="pd1-b1" onchange="calcTotal()"></div>
+        <div class="field"><div class="lbl">Full Per Diem Days</div><input type="number" min="0" step="1" value="0" id="pd2-b1" onchange="calcTotal()"></div>
+      </div>
+    </div></div></div>
 
   <!-- Non-Billable -->
   <div class="section-bar">
     <div class="section-label">📋 Non-Billable Time</div>
     <button class="add-row-btn" onclick="addNonBillable()">+ Add Non-Billable Row</button>
   </div>
-  <div id="nonbillable-rows"></div>
+  <div id="nonbillable-rows"><div class="row-card" id="card-nb1">
+    <div class="row-card-hdr">
+      <div class="row-card-title">Non-Billable Row 1</div>
+      <button class="del-btn" onclick="delRow(&#39;nb1&#39;,&#39;nb&#39;)">Remove</button>
+    </div>
+    <div class="row-fields">
+      <div class="field">
+        <div class="lbl">PM</div>
+        <select id="pm-nb1"><option value="">Select...</option><option>Lozano</option><option>Nguyen</option><option>Prado</option><option>Sanchez</option><option>Valtierra</option><option>Walding</option><option>Catacoly</option></select>
+      </div>
+      <div class="field">
+        <div class="lbl">Type of Work</div>
+        <select id="type-nb1"><option value="">Select...</option><option>SHOP SUPPORT</option><option>SALES SUPPORT</option><option>HOLIDAY</option><option>SICK DAY</option><option>VACATION</option><option>JURY DUTY</option><option>EMPLOYEE TRAINING</option><option>NON-BILLABLE TRAVEL</option></select>
+      </div>
+      <div class="field" style="grid-column: span 2;">
+        <div class="lbl">Notes</div>
+        <textarea id="notes-nb1" rows="2" placeholder="Optional notes" style="resize:vertical;"></textarea>
+      </div>
+    </div>
+    <div class="days-section">
+    <div class="days-lbl">Hours Per Day</div>
+    <div class="days-grid">
+      <div class="day-col"><div class="day-name">Mon</div><input class="day-input" type="number" min="0" max="24" step="0.5" id="d-nb1-Mon" onchange="calcRow(&#39;nb1&#39;)"></div><div class="day-col"><div class="day-name">Tue</div><input class="day-input" type="number" min="0" max="24" step="0.5" id="d-nb1-Tue" onchange="calcRow(&#39;nb1&#39;)"></div><div class="day-col"><div class="day-name">Wed</div><input class="day-input" type="number" min="0" max="24" step="0.5" id="d-nb1-Wed" onchange="calcRow(&#39;nb1&#39;)"></div><div class="day-col"><div class="day-name">Thu</div><input class="day-input" type="number" min="0" max="24" step="0.5" id="d-nb1-Thu" onchange="calcRow(&#39;nb1&#39;)"></div><div class="day-col"><div class="day-name">Fri</div><input class="day-input" type="number" min="0" max="24" step="0.5" id="d-nb1-Fri" onchange="calcRow(&#39;nb1&#39;)"></div><div class="day-col"><div class="day-name">Sat</div><input class="day-input" type="number" min="0" max="24" step="0.5" id="d-nb1-Sat" onchange="calcRow(&#39;nb1&#39;)"></div><div class="day-col"><div class="day-name">Sun</div><input class="day-input" type="number" min="0" max="24" step="0.5" id="d-nb1-Sun" onchange="calcRow(&#39;nb1&#39;)"></div>
+    </div>
+    <div class="row-total"><span class="row-total-lbl">Row total:</span><span class="row-total-val" id="rt-nb1">0.0 hrs</span></div>
+  </div>
+    <div class="perdiem-section">
+      <div class="perdiem-lbl">Training Per Diem Days</div>
+      <input type="number" min="0" step="1" value="0" id="tpd-nb1" style="width:120px;margin-top:4px;" onchange="calcTotal()">
+    </div></div></div>
 
   <!-- Summary -->
   <div class="summary-card">
@@ -196,11 +277,11 @@
     <div class="grid2">
       <div class="field">
         <div class="lbl">Manager Name</div>
-        <input type="text" id="mgrName" placeholder="Manager name" />
+        <input type="text" id="mgrName" placeholder="Manager name">
       </div>
       <div class="field">
         <div class="lbl">Sign-Off Date</div>
-        <input type="date" id="mgrDate" />
+        <input type="date" id="mgrDate">
       </div>
     </div>
   </div>
@@ -440,5 +521,6 @@ function submitTimesheet() {
 addBillable();
 addNonBillable();
 </script>
-</body>
-</html>
+
+
+</body></html>
