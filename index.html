@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0067)file:///C:/Users/jessie.lozano/Downloads/PCTX_Timesheet%20(10).html -->
+<!-- saved from url=(0076)file:///C:/Users/jessie.lozano/Downloads/new%20PCTX_FieldService_System.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -113,7 +113,7 @@ hr{border:none;border-top:1px solid var(--border-light);margin:16px 0}
 @media(max-width:700px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.nav-tab{padding:14px 8px;font-size:12px}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com/">
-<link href="file:///C:/Users/jessie.lozano/Downloads/PCTX%20Field%20Service%20%E2%80%94%20Timesheet%20&amp;%20Utilization%20System_New_files/css2" rel="stylesheet">
+<link href="./PCTX Field Service — Timesheet &amp; Utilization System_New_files/css2" rel="stylesheet">
 </head>
 <body>
 <nav class="nav">
@@ -122,8 +122,8 @@ hr{border:none;border-top:1px solid var(--border-light);margin:16px 0}
     <button class="nav-tab active" onclick="showPage(&#39;timesheet&#39;)">Timesheet</button>
     <button class="nav-tab" onclick="showPage(&#39;payroll&#39;)">Payroll output</button>
     <button class="nav-tab" onclick="showPage(&#39;utilization&#39;)">Utilization</button>
-    <button class="nav-tab" onclick="showPage(&#39;pmapproval&#39;)">PM Approval <span id="pm-approval-badge" style="display: inline; background: var(--red); color: rgb(255, 255, 255); border-radius: 10px; padding: 1px 6px; font-size: 11px; margin-left: 4px;">4</span></button>
-    <button class="nav-tab" onclick="showPage(&#39;approval&#39;)">Manager Approval <span id="approval-badge" style="display: inline; background: var(--red); color: rgb(255, 255, 255); border-radius: 10px; padding: 1px 6px; font-size: 11px; margin-left: 4px;">6</span></button>
+    <button class="nav-tab" onclick="showPage(&#39;pmapproval&#39;)">PM Approval <span id="pm-approval-badge" style="display:none;background:var(--red);color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;margin-left:4px">0</span></button>
+    <button class="nav-tab" onclick="showPage(&#39;approval&#39;)">Manager Approval <span id="approval-badge" style="display:none;background:var(--red);color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;margin-left:4px">0</span></button>
     <button class="nav-tab" onclick="showPage(&#39;contractors&#39;)">Contractors</button>
     <button class="nav-tab" onclick="showPage(&#39;admin&#39;)">Admin</button>
   </div>
@@ -169,10 +169,7 @@ hr{border:none;border-top:1px solid var(--border-light);margin:16px 0}
         <td style="width:46px">Thu</td><td style="width:46px">Fri</td><td style="width:46px">Sat</td>
         <td style="width:46px">Sun</td><td class="tot-cell">Total</td><td style="width:30px"></td>
       </tr>
-      </tbody><tbody id="bill-tbody"><tr class="ts-row" id="row-rmp1azn7w22w"><td><input type="text" id="p1-rmp1azn7w22w" placeholder="Project # / SR #" style="font-size:12px;width:100%"></td>
-      <td><input type="text" id="p4-rmp1azn7w22w" placeholder="Job #" style="font-size:12px;width:100%"></td>
-      <td><input type="text" id="p2-rmp1azn7w22w" placeholder="Customer name" style="font-size:12px;width:100%"></td>
-      <td><select id="p3-rmp1azn7w22w" style="font-size:12px;width:100%"><option>ONSITE WORK</option><option>JOB RELATED TRAVEL</option><option>STANDBY TIME</option><option>JOB PREPARATION</option><option>OFFSITE BILLABLE TIME</option><option>SITE SPECIFIC TRAINING</option><option>ON JOB TRAINING</option><option>ON JOB TRAINING TRAVEL</option><option>REPORTING</option></select></td><td><select id="pm-rmp1azn7w22w" style="font-size:12px;width:100%"><option value="">— PM —</option><option value="Alejandra Walding">Alejandra Walding</option><option value="Savannah Prado">Savannah Prado</option><option value="Mike Nguyen">Mike Nguyen</option><option value="Andres Catacoly">Andres Catacoly</option><option value="Rick Kelsey">Rick Kelsey</option></select></td><td><input type="number" id="Mon-rmp1azn7w22w" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Tue-rmp1azn7w22w" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Wed-rmp1azn7w22w" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Thu-rmp1azn7w22w" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Fri-rmp1azn7w22w" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Sat-rmp1azn7w22w" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Sun-rmp1azn7w22w" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td class="tot-cell"><span id="tot-rmp1azn7w22w">0</span></td><td><button type="button" class="rm-btn" id="rm-rmp1azn7w22w">x</button></td></tr></tbody>
+      </tbody><tbody id="bill-tbody"></tbody>
     </table></div>
     <div style="margin-top:6px"><button type="button" class="add-row" id="add-bill-btn">+ Add billable row</button></div>
   </div>
@@ -193,9 +190,7 @@ hr{border:none;border-top:1px solid var(--border-light);margin:16px 0}
         <td style="width:46px">Thu</td><td style="width:46px">Fri</td><td style="width:46px">Sat</td>
         <td style="width:46px">Sun</td><td class="tot-cell">Total</td><td style="width:30px"></td>
       </tr>
-      </tbody><tbody id="util-tbody"><tr class="ts-row" id="row-rmp1azn7wmd1"><td><input type="text" id="p1-rmp1azn7wmd1" placeholder="Project # (optional)" style="font-size:12px;width:100%"></td>
-      <td><input type="text" id="p2-rmp1azn7wmd1" placeholder="Notes" style="font-size:12px;width:100%"></td>
-      <td><select id="p3-rmp1azn7wmd1" style="font-size:12px;width:100%"><option>CAPEX SUPPORT</option><option>WARRANTY</option><option>WARRANTY TRAVEL</option><option>SHOP SUPPORT</option><option>SALES SUPPORT</option><option>EMPLOYEE TRAINING</option><option>NON-BILLABLE TRAVEL</option><option>SITE WALK</option></select></td><td><select id="pm-rmp1azn7wmd1" style="font-size:12px;width:100%"><option value="">— PM —</option><option value="Alejandra Walding">Alejandra Walding</option><option value="Savannah Prado">Savannah Prado</option><option value="Mike Nguyen">Mike Nguyen</option><option value="Andres Catacoly">Andres Catacoly</option><option value="Rick Kelsey">Rick Kelsey</option></select></td><td><input type="number" id="Mon-rmp1azn7wmd1" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Tue-rmp1azn7wmd1" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Wed-rmp1azn7wmd1" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Thu-rmp1azn7wmd1" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Fri-rmp1azn7wmd1" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Sat-rmp1azn7wmd1" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Sun-rmp1azn7wmd1" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td class="tot-cell"><span id="tot-rmp1azn7wmd1">0</span></td><td><button type="button" class="rm-btn" id="rm-rmp1azn7wmd1">x</button></td></tr></tbody>
+      </tbody><tbody id="util-tbody"></tbody>
     </table></div>
     <div style="margin-top:6px"><button type="button" class="add-row" id="add-util-btn">+ Add utilized row</button></div>
   </div>
@@ -214,8 +209,7 @@ hr{border:none;border-top:1px solid var(--border-light);margin:16px 0}
         <td style="width:46px">Thu</td><td style="width:46px">Fri</td><td style="width:46px">Sat</td>
         <td style="width:46px">Sun</td><td class="tot-cell">Total</td><td style="width:30px"></td>
       </tr>
-      </tbody><tbody id="nonbill-tbody"><tr class="ts-row" id="row-rmp1azn7wxin"><td><select id="p3-rmp1azn7wxin" style="font-size:12px;width:100%"><option>PTO / VACATION</option><option>HOLIDAY</option><option>SICK DAY</option><option>JURY DUTY</option><option>BEREAVEMENT</option><option>OTHER</option></select></td>
-      <td><input type="text" id="p2-rmp1azn7wxin" placeholder="Notes" style="font-size:12px;width:100%"></td><td><select id="pm-rmp1azn7wxin" style="font-size:12px;width:100%"><option value="">— PM —</option><option value="Alejandra Walding">Alejandra Walding</option><option value="Savannah Prado">Savannah Prado</option><option value="Mike Nguyen">Mike Nguyen</option><option value="Andres Catacoly">Andres Catacoly</option><option value="Rick Kelsey">Rick Kelsey</option></select></td><td><input type="number" id="Mon-rmp1azn7wxin" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Tue-rmp1azn7wxin" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Wed-rmp1azn7wxin" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Thu-rmp1azn7wxin" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Fri-rmp1azn7wxin" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Sat-rmp1azn7wxin" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td><input type="number" id="Sun-rmp1azn7wxin" min="0" max="24" step="0.5" style="width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit"></td><td class="tot-cell"><span id="tot-rmp1azn7wxin">0</span></td><td><button type="button" class="rm-btn" id="rm-rmp1azn7wxin">x</button></td></tr></tbody>
+      </tbody><tbody id="nonbill-tbody"></tbody>
     </table></div>
     <div style="margin-top:6px"><button type="button" class="add-row" id="add-nonbill-btn">+ Add non-billable row</button></div>
   </div>
@@ -259,7 +253,7 @@ hr{border:none;border-top:1px solid var(--border-light);margin:16px 0}
     <div class="card-head">
       <div><div class="card-title">PM Approval</div><div class="card-sub">Select your name to see rows assigned to you that need approval. All rows must be PM-approved before the timesheet goes to Manager sign-off.</div></div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <select id="pm-select" style="width:180px" onchange="renderPMApproval()"><option value="">Select your name...</option><option value="Alejandra Walding">Alejandra Walding</option><option value="Savannah Prado">Savannah Prado</option><option value="Mike Nguyen">Mike Nguyen</option><option value="Andres Catacoly">Andres Catacoly</option><option value="Rick Kelsey">Rick Kelsey</option></select>
+        <select id="pm-select" style="width:180px" onchange="renderPMApproval()"><option value="">Select your name...</option></select>
         <select id="pm-week-filter" style="width:150px" onchange="renderPMApproval()"><option value="all">All weeks</option></select>
         <label style="display:flex;align-items:center;gap:6px;font-size:13px;text-transform:none;letter-spacing:0;cursor:pointer">
           <input type="checkbox" id="pm-show-approved" onchange="renderPMApproval()" style="width:auto"> Show approved
@@ -294,7 +288,7 @@ hr{border:none;border-top:1px solid var(--border-light);margin:16px 0}
     <div class="card-head">
       <div><div class="card-title">Payroll output — Tech Time Template format</div><div class="card-sub">Auto-populated from submitted timesheets. Export to send to accounting.</div></div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <select id="pr-week-filter" style="width:150px" onchange="renderPayroll()"><option value="all">All weeks</option><option>2026-04-26</option><option>2026-05-03</option><option>2026-05-10</option></select>
+        <select id="pr-week-filter" style="width:150px" onchange="renderPayroll()"><option value="all">All weeks</option><option>2026-04-26</option><option>2026-05-03</option></select>
         <select id="pr-tech-filter" style="width:140px" onchange="renderPayroll()"><option value="all">All techs</option><option>Charlie White</option><option>Jason Youngblood</option><option>Scott Schmelter</option><option>Alberto Solis</option></select>
         <button class="btn btn-primary btn-sm" onclick="exportPayrollCSV()">Export CSV</button>
         <button class="btn btn-sm" onclick="exportPayrollPDF()" style="background:var(--red);color:#fff;border-color:var(--red)">Export PDF</button>
@@ -329,7 +323,7 @@ hr{border:none;border-top:1px solid var(--border-light);margin:16px 0}
     <div class="card-head">
       <div><div class="card-title">Utilization dashboard</div><div class="card-sub">Billable = charged to customer &nbsp;|&nbsp; Utilized = internal work &nbsp;|&nbsp; Non-billable = PTO/Holiday/Sick</div></div>
       <div style="display:flex;gap:8px;align-items:center">
-        <select id="ut-week-filter" style="width:150px" onchange="renderUtil()"><option value="all">All weeks</option><option>2026-04-26</option><option>2026-05-03</option><option>2026-05-10</option></select>
+        <select id="ut-week-filter" style="width:150px" onchange="renderUtil()"><option value="all">All weeks</option><option>2026-04-26</option><option>2026-05-03</option></select>
         <button class="btn btn-sm" onclick="exportUtilCSV()">Export CSV</button>
       </div>
     </div>
@@ -434,32 +428,7 @@ hr{border:none;border-top:1px solid var(--border-light);margin:16px 0}
     </div>
     <div class="card">
       <div class="card-title" style="margin-bottom:14px">Project Manager roster</div>
-      <div id="pm-roster-list">
-    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border-light)">
-      <span style="flex:1;font-size:13px;font-weight:500">Alejandra Walding</span>
-      <span class="badge badge-gray" style="font-size:11px">alejandra.walding@pctx.us</span>
-      <button class="btn btn-sm" onclick="removePM(&#39;Alejandra Walding&#39;)">Remove</button>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border-light)">
-      <span style="flex:1;font-size:13px;font-weight:500">Savannah Prado</span>
-      <span class="badge badge-gray" style="font-size:11px">savannah.prado@pctx.us</span>
-      <button class="btn btn-sm" onclick="removePM(&#39;Savannah Prado&#39;)">Remove</button>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border-light)">
-      <span style="flex:1;font-size:13px;font-weight:500">Mike Nguyen</span>
-      <span class="badge badge-gray" style="font-size:11px">mike.nguyen@pctx.us</span>
-      <button class="btn btn-sm" onclick="removePM(&#39;Mike Nguyen&#39;)">Remove</button>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border-light)">
-      <span style="flex:1;font-size:13px;font-weight:500">Andres Catacoly</span>
-      <span class="badge badge-gray" style="font-size:11px">andres.catacoly@pctx.us</span>
-      <button class="btn btn-sm" onclick="removePM(&#39;Andres Catacoly&#39;)">Remove</button>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border-light)">
-      <span style="flex:1;font-size:13px;font-weight:500">Rick Kelsey</span>
-      <span class="badge badge-gray" style="font-size:11px">rick.kelsey@pctx.us</span>
-      <button class="btn btn-sm" onclick="removePM(&#39;Rick Kelsey&#39;)">Remove</button>
-    </div></div>
+      <div id="pm-roster-list"><div class="empty">No PMs added yet.</div></div>
       <hr>
       <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end">
         <div class="fld" style="margin:0"><label>Full name</label><input type="text" id="new-pm-name" placeholder="First Last"></div>
@@ -1944,7 +1913,7 @@ function buildManagerReadyEmailHTML(entry){
   const border='#D3D1C7',text='#1A1A18',text2='#5F5E5A',text3='#888780';
   const green='#27500A',greenLight='#EAF3DE',amber='#854F0B',amberLight='#FAEEDA';
   const red='#A32D2D',redLight='#FCEBEB',blue='#185FA5',blueLight='#E6F1FB';
-  const APP_URL='https://pctx.sharepoint.com/sites/PCTXHVACServices/Shared%20Documents/PCTX_Timesheet.html';
+  const APP_URL='https://jlozano60.github.io/pctx-timesheet';
   function pct(v){if(v>=70)return{bg:greenLight,c:green};if(v>=50)return{bg:amberLight,c:amber};return{bg:redLight,c:red};}
   const pc=pct(entry.billPct);
   function metric(label,val,bg){return `<td style="padding:0 6px 0 0"><div style="background:${bg||'#f7f6f2'};border:1px solid ${border};border-radius:6px;padding:8px 12px;min-width:80px;display:inline-block;text-align:center"><div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:${text3};margin-bottom:3px">${label}</div><div style="font-size:16px;font-weight:700;color:${text}">${val}</div></div></td>`;}
@@ -2035,7 +2004,7 @@ function buildPMEmailHTML(pmName, pmRows, entry){
     </div>
     <div style="margin-top:20px;padding:16px;background:#f7f6f2;border:1px solid ${border};border-radius:8px;text-align:center">
       <div style="font-size:12px;color:${text2};margin-bottom:10px">Click below to open the app and approve your rows:</div>
-      <a href="https://pctx.sharepoint.com/sites/PCTXHVACServices/Shared%20Documents/PCTX_Timesheet.html?tab=pmapproval&pm="+encodeURIComponent(pmName)+" style="background:#185FA5;color:#fff;padding:10px 24px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;display:inline-block">Open PM Approval Tab →</a>
+      <a href="https://jlozano60.github.io/pctx-timesheet?tab=pmapproval&pm="+encodeURIComponent(pmName)+" style="background:#185FA5;color:#fff;padding:10px 24px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;display:inline-block">Open PM Approval Tab →</a>
     </div>
     <div style="margin-top:12px;font-size:10px;color:${text3};text-align:center">PCTX Field Service Timesheet System · Confidential · ${now}</div>
   </div></body></html>`;
