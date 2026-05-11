@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PCTX — Approving Row...</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Arial,sans-serif;background:#f7f6f2;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+    .card{background:#fff;border-radius:12px;padding:40px;max-width:480px;width:100%;text-align:center;box-shadow:0 2px 16px rgba(0,0,0,.08)}
+    .logo{font-size:11px;font-weight:700;color:#639922;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+    .title{font-size:22px;font-weight:700;color:#1A1A18;margin-bottom:8px}
+    .sub{font-size:14px;color:#5F5E5A;margin-bottom:24px}
+    .spinner{width:40px;height:40px;border:4px solid #eee;border-top:4px solid #27500A;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 20px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .success{background:#EAF3DE;border:1px solid #97C459;border-radius:8px;padding:16px;color:#27500A;font-weight:600;font-size:15px;margin-bottom:16px}
+    .error{background:#FCEBEB;border:1px solid #E57373;border-radius:8px;padding:16px;color:#A32D2D;font-size:13px;margin-bottom:16px}
+    .btn{background:#27500A;color:#fff;padding:12px 24px;border-radius:6px;font-size:14px;font-weight:600;text-decoration:none;display:inline-block;margin-top:12px}
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">PCTX Field Service</div>
+  <div id="content">
+    <div class="spinner"></div>
+    <div class="title">Processing Approval</div>
+    <div class="sub" id="status-msg">Please wait...</div>
+  </div>
+</div>
+
+<script>
+async function processApproval(){
+  const params=new URLSearchParams(window.location.search);
+  const flowUrl=decodeURIComponent(params.get('flowUrl')||'');
+  const itemId=parseInt(params.get('itemId')||'0');
+  const pmName=decodeURIComponent(params.get('pmName')||'');
+  const tech=decodeURIComponent(params.get('tech')||'');
+  const week=decodeURIComponent(params.get('week')||'');
+  const rowDetail=decodeURIComponent(params.get('rowDetail')||'{}');
+
+  const content=document.getElementById('content');
+  const statusMsg=document.getElementById('status-msg');
+
+  if(!flowUrl||!itemId){
+    content.innerHTML='<div class="error">Invalid approval link — missing required parameters.</div>';
+    return;
+  }
+
+  statusMsg.textContent=`Approving row for ${tech} — Week ${week}...`;
+
+  try{
+    const res=await fetch(flowUrl,{
+      method:'POST',
+      mode:'cors',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({
+        itemId:itemId,
+        rowDetail:rowDetail,
+        pmName:pmName,
+        tech:tech,
+        week:week
+      })
+    });
+
+    if(res.ok){
+      content.innerHTML=`
+        <div class="success">✓ Row approved successfully!</div>
+        <div class="title" style="margin-bottom:8px">Thank you, ${pmName}</div>
+        <div class="sub">Your approval for <strong>${tech}</strong>'s timesheet (week ending <strong>${week}</strong>) has been recorded.</div>
+        <div class="sub" style="margin-top:12px;font-size:12px;color:#888">You can close this tab.</div>
+      `;
+    } else {
+      const errText=await res.text().catch(()=>'');
+      throw new Error('Flow returned '+res.status+': '+errText);
+    }
+  }catch(e){
+    console.error('Approval failed:',e);
+    content.innerHTML=`
+      <div class="error">⚠ Approval could not be saved automatically.<br><br>${e.message}</div>
+      <div class="sub">Please open the app and approve manually.</div>
+      <a href="https://jlozano60.github.io/pctx-timesheet?tab=pmapproval&pm=${encodeURIComponent(pmName)}" class="btn">Open PM Approval Tab →</a>
+    `;
+  }
+}
+
+processApproval();
+</script>
+</body>
+</html>
