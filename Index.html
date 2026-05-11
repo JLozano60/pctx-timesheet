@@ -523,6 +523,8 @@ const SP_CONFIG = {
 // ═══════════════════════════════════════════════════════
 
 const SP_CONNECTED = SP_CONFIG.FLOW_URL.length > 0;
+// Session cache for PM approvals — survives re-fetches within same session
+const _pmApprovalCache = {}; // key: tech|week|sect|idx -> true/false
 
 let techs=[{name:'Charlie White',hrs:40},{name:'Edgar Gonzalez',hrs:40},{name:'David Quiroz',hrs:40},{name:'Jason Youngblood',hrs:40},{name:'Manny Gonzalez',hrs:40},{name:'Scott Schmelter',hrs:40}];
 let pms=[{name:'Alejandra Walding',email:'alejandra.walding@pctx.us'},{name:'Savannah Prado',email:'savannah.prado@pctx.us'},{name:'Mike Nguyen',email:'mike.nguyen@pctx.us'},{name:'Andres Catacoly',email:'andres.catacoly@pctx.us'},{name:'Rick Kelsey',email:'rick.kelsey@pctx.us'}];
@@ -770,18 +772,12 @@ async function fetchSPData(){
       pm:r.PM||'',sig:r.TechSig||'',mgrSig:r.MgrSig||'',submitted:r.Submitted||'',unlocked:r.Unlocked||false,rowDetail:(()=>{
         try{
           const rd=JSON.parse(r.RowDetail||'{}');
-          // Validate pmApproved: only trust it if pmApprovedAt is AFTER submittedAt
-          // This prevents stale approvals from old test submissions persisting
+          // Reset pmApproved on read, then restore from session cache
+          const techKey=r.Tech+'|'+(r.WeekEnding?.split('T')[0]||'');
           ['bill','util','nonbill'].forEach(sect=>{
-            (rd[sect]||[]).forEach(row=>{
-              if(row.pmApproved===true){
-                const approvedAt=row.pmApprovedAt?new Date(row.pmApprovedAt):null;
-                const submittedAt=row.submittedAt?new Date(row.submittedAt):null;
-                // If no timestamps or approvedAt is before/equal to submittedAt, reset
-                if(!approvedAt||!submittedAt||approvedAt<=submittedAt){
-                  row.pmApproved=false;
-                }
-              }
+            (rd[sect]||[]).forEach((row,idx)=>{
+              const cacheKey=techKey+'|'+sect+'|'+idx;
+              row.pmApproved=_pmApprovalCache[cacheKey]||false;
             });
           });
           return rd;
@@ -1141,9 +1137,12 @@ async function resetPMApprovals(tech, week){
   const src=SP_CONNECTED?spData:timesheets;
   const entry=src.find(t=>t.tech===tech&&t.week===week);
   if(!entry||!entry.rowDetail){alert('Could not find timesheet.');return;}
-  // Reset all pmApproved flags
+  // Reset all pmApproved flags and clear session cache
   ['bill','util','nonbill'].forEach(sect=>{
-    (entry.rowDetail[sect]||[]).forEach(r=>r.pmApproved=false);
+    (entry.rowDetail[sect]||[]).forEach((r,idx)=>{
+      r.pmApproved=false;
+      delete _pmApprovalCache[`${tech}|${week}|${sect}|${idx}`];
+    });
   });
   // Sync to local
   const local=timesheets.find(t=>t.tech===tech&&t.week===week);
@@ -1952,6 +1951,8 @@ async function approvePMRow(tech, week, sect, idx){
   if(!rowArr||!rowArr[idx]) return;
   rowArr[idx].pmApproved=true;
   rowArr[idx].pmApprovedAt=new Date().toISOString();
+  // Cache approval in session so it survives re-fetches
+  _pmApprovalCache[`${tech}|${week}|${sect}|${idx}`]=true;
   // Sync to local timesheets
   const local=timesheets.find(t=>t.tech===tech&&t.week===week);
   if(local&&local.rowDetail&&local.rowDetail[sect]&&local.rowDetail[sect][idx]){
