@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<!-- saved from url=(0076)file:///C:/Users/jessie.lozano/Downloads/new%20PCTX_FieldService_System.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCTX Field Service — Timesheet &amp; Utilization System</title>
+<style>
+:root{
+  --green:#2D6A2D;--green-light:#EAF3DE;--green-mid:#639922;--green-dark:#27500A;
+  --blue:#185FA5;--blue-light:#E6F1FB;--blue-mid:#378ADD;--blue-dark:#0C447C;
+  --amber:#854F0B;--amber-light:#FAEEDA;--amber-mid:#EF9F27;--amber-dark:#633806;
+  --gray-light:#F1EFE8;--gray-mid:#888780;--gray-dark:#2C2C2A;
+  --red:#A32D2D;--red-light:#FCEBEB;
+  --border:#D3D1C7;--border-light:#E8E6DF;
+  --bg:#FAFAF8;--surface:#FFFFFF;--surface2:#F7F6F2;
+  --text:#1A1A18;--text2:#5F5E5A;--text3:#888780;
+  --radius:8px;--radius-lg:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;position:sticky;top:0;z-index:100}
+.nav-brand{font-size:13px;font-weight:600;padding:16px 0;margin-right:24px;letter-spacing:.02em;white-space:nowrap}
+.nav-brand span{color:var(--green-mid)}
+.nav-tabs{display:flex}
+.nav-tab{padding:18px 15px;font-size:13px;cursor:pointer;border:none;background:transparent;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;font-family:inherit}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{color:var(--green-dark);border-bottom:2px solid var(--green-mid);font-weight:500}
+.nav-right{margin-left:auto;font-size:12px;color:var(--text3)}
+.page{display:none;padding:24px;max-width:1100px;margin:0 auto}
+.page.active{display:block}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-title{font-size:14px;font-weight:600;color:var(--text)}
+.card-sub{font-size:12px;color:var(--text3);margin-top:2px}
+label{display:block;font-size:11px;font-weight:500;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text);background:var(--surface);font-family:inherit;transition:border-color .15s}
+input:focus,select:focus{outline:none;border-color:var(--green-mid)}
+input[type=number]{text-align:center;padding:8px 4px}
+input[readonly]{background:var(--surface2);color:var(--text2)}
+.fld{margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.btn{padding:8px 18px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;cursor:pointer;background:var(--surface);color:var(--text);font-family:inherit;font-weight:500;transition:all .15s;white-space:nowrap}
+.btn:hover{background:var(--surface2)}
+.btn-primary{background:var(--green-dark);color:#fff;border-color:var(--green-dark)}
+.btn-primary:hover{background:var(--green)}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-bill{background:var(--green-light);color:var(--green-dark)}
+.badge-util{background:var(--blue-light);color:var(--blue-dark)}
+.badge-nonbill{background:var(--amber-light);color:var(--amber-dark)}
+.badge-gray{background:var(--gray-light);color:var(--gray-dark)}
+.badge-red{background:var(--red-light);color:var(--red)}
+.metric{background:var(--surface2);border-radius:var(--radius);padding:14px 16px}
+.metric .lbl{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.metric .val{font-size:26px;font-weight:600;color:var(--text);line-height:1}
+.metric .sub{font-size:11px;color:var(--text3);margin-top:4px}
+.metric-bill{background:var(--green-light)}
+.metric-bill .lbl{color:var(--green-mid)}
+.metric-bill .val{color:var(--green-dark)}
+.metric-bill .sub{color:var(--green)}
+.metric-util{background:var(--blue-light)}
+.metric-util .lbl{color:var(--blue-mid)}
+.metric-util .val{color:var(--blue-dark)}
+.metric-util .sub{color:var(--blue)}
+.metric-nonbill{background:var(--amber-light)}
+.metric-nonbill .lbl{color:var(--amber-mid)}
+.metric-nonbill .val{color:var(--amber-dark)}
+.metric-nonbill .sub{color:var(--amber)}
+.sect-hdr{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius);margin-bottom:10px}
+.sect-hdr-bill{background:var(--green-light);border-left:3px solid var(--green-mid)}
+.sect-hdr-util{background:var(--blue-light);border-left:3px solid var(--blue-mid)}
+.sect-hdr-nonbill{background:var(--amber-light);border-left:3px solid var(--amber-mid)}
+.sect-hdr .title{font-size:13px;font-weight:600}
+.sect-hdr-bill .title{color:var(--green-dark)}
+.sect-hdr-util .title{color:var(--blue-dark)}
+.sect-hdr-nonbill .title{color:var(--amber-dark)}
+.sect-hdr .desc{font-size:11px;color:var(--text3);margin-left:auto}
+.ts-wrap{overflow-x:auto;margin-bottom:4px}
+.ts-table{width:100%;min-width:860px;border-collapse:collapse}
+.ts-hdr td{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;padding:5px 6px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.ts-row td{padding:4px 4px;border-bottom:1px solid var(--border-light);vertical-align:middle}
+.ts-row:last-child td{border-bottom:none}
+.ts-row input,.ts-row select{font-size:12px;padding:6px 6px;border-color:var(--border-light)}
+.ts-row input[type=number]{width:46px}
+.tot-cell{width:52px;text-align:center;font-size:13px;font-weight:600;color:var(--text)}
+.add-row{width:100%;padding:7px;font-size:12px;color:var(--text3);background:none;border:1px dashed var(--border);border-radius:var(--radius);cursor:pointer;text-align:left;margin-top:4px;font-family:inherit}
+.add-row:hover{background:var(--surface2)}
+.rm-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:2px 6px;border-radius:4px;line-height:1}
+.rm-btn:hover{color:var(--red);background:var(--red-light)}
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{text-align:left;padding:8px 10px;font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;background:var(--surface2);border-bottom:1px solid var(--border)}
+.data-table td{padding:9px 10px;border-bottom:1px solid var(--border-light);color:var(--text)}
+.data-table tbody tr:last-child td{border-bottom:none}
+.data-table tbody tr:hover{background:var(--surface2)}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-lg)}
+.prog-row{display:grid;grid-template-columns:120px 1fr 48px;align-items:center;gap:10px;margin-bottom:8px}
+.prog-name{font-size:13px;font-weight:500}
+.prog-track{background:var(--border-light);border-radius:4px;height:10px;overflow:hidden;position:relative}
+.prog-fill{height:100%;border-radius:4px;transition:width .4s}
+.prog-pct{font-size:12px;color:var(--text2);text-align:right;font-weight:500}
+hr{border:none;border-top:1px solid var(--border-light);margin:16px 0}
+.alert{padding:10px 14px;border-radius:var(--radius);font-size:13px;margin-bottom:14px;border:1px solid transparent}
+.alert-success{background:var(--green-light);color:var(--green-dark);border-color:#97C459}
+.alert-info{background:var(--blue-light);color:var(--blue-dark);border-color:#85B7EB}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--text2);margin-bottom:12px}
+.legend-item{display:flex;align-items:center;gap:5px}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.empty{text-align:center;padding:32px;color:var(--text3);font-size:13px;font-style:italic}
+.cert-block{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px}
+@media(max-width:700px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.nav-tab{padding:14px 8px;font-size:12px}}
+
+.badge-pending{background:#FEF3C7;color:#92400E}
+.badge-pm-approved{background:#DBEAFE;color:#1E40AF}
+.badge-approved{background:var(--green-light);color:var(--green-dark)}
+.badge-rejected{background:var(--red-light);color:var(--red)}
+.approval-card{border-left:4px solid var(--amber-mid)}
+.approval-card.pm-approved{border-left-color:var(--blue-mid)}
+.approval-card.approved{border-left-color:var(--green-mid)}
+.approval-card.rejected{border-left-color:var(--red)}
+.appr-row{display:flex;align-items:flex-start;gap:16px;padding:14px 0;border-bottom:1px solid var(--border-light)}
+.appr-row:last-child{border-bottom:none}
+.appr-info{flex:1;min-width:0}
+.appr-name{font-size:14px;font-weight:600;margin-bottom:2px}
+.appr-meta{font-size:12px;color:var(--text3)}
+.appr-actions{display:flex;gap:8px;flex-shrink:0;align-items:center}
+.btn-approve{background:var(--green-dark);color:#fff;border-color:var(--green-dark)}
+.btn-approve:hover{background:var(--green)}
+.btn-reject{background:var(--red);color:#fff;border-color:var(--red)}
+.btn-reject:hover{opacity:.85}
+.notif-dot{display:inline-block;background:var(--red);color:#fff;border-radius:50%;font-size:10px;font-weight:700;width:16px;height:16px;line-height:16px;text-align:center;margin-left:4px;vertical-align:middle}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="PCTX%20Field%20Service%20—%20Timesheet%20%26%20Utilization%20System_New_files/css2" rel="stylesheet">
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-brand">PCTX <span>Field Service</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage(&#39;timesheet&#39;)">Timesheet</button>
+    <button class="nav-tab" onclick="showPage(&#39;payroll&#39;)">Payroll output</button>
+    <button class="nav-tab" onclick="showPage(&#39;utilization&#39;)">Utilization</button>
+    <button class="nav-tab" onclick="showPage(&#39;contractors&#39;)">Contractors</button>
+    <button class="nav-tab" id="tab-pmapproval" onclick="showPage(&#39;pmapproval&#39;)">PM Approval <span class="notif-dot" id="pm-badge" style="display:none">0</span></button>
+    <button class="nav-tab" id="tab-mgrapproval" onclick="showPage(&#39;mgrapproval&#39;)">Manager Approval <span class="notif-dot" id="mgr-badge" style="display:none">0</span></button>
+    <button class="nav-tab" onclick="showPage(&#39;admin&#39;)">Admin</button>
+  </div>
+  <div class="nav-right" id="nav-week"></div>
+</nav>
+
+<!-- TIMESHEET -->
+<div class="page active" id="page-timesheet">
+  <div id="ts-success" class="alert alert-success" style="display:none">Timesheet submitted. Payroll output and utilization have been updated.</div>
+  <div class="card">
+    <div class="card-head">
+      <div><div class="card-title">PCTX Field Service — weekly time record</div><div class="card-sub">Complete all sections. PM initials required on each line. Hours auto-total as you type.</div></div>
+      <span style="font-size:11px;color:var(--text3);background:var(--surface2);padding:4px 10px;border-radius:20px;border:1px solid var(--border)">Rev 15</span>
+    </div>
+    <div class="grid3">
+      <div class="fld"><label>Tech name</label><select id="ts-tech" onchange="calcSummary()"><option value="">Select tech...</option><option>Charlie White</option><option>Jason Youngblood</option><option>Scott Schmelter</option><option>Alberto Solis</option></select></div>
+      <div class="fld"><label>Week ending (Sunday)</label><input type="date" id="ts-week" onchange="updateNavWeek();calcSummary()"></div>
+      <div class="fld"><label>Employee ID / title (optional)</label><input type="text" id="ts-title" placeholder="e.g. FS Tech II"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sect-hdr sect-hdr-bill">
+      <span class="badge badge-bill">Billable</span>
+      <span class="title">Charged to customer</span>
+      <span class="desc">Onsite work · Job travel · Standby · Job prep · Offsite billable · Reporting</span>
+    </div>
+    <div class="ts-wrap"><table class="ts-table" id="bill-table">
+      <tbody><tr class="ts-hdr">
+        <td style="width:110px">Project # / SR #</td>
+        <td style="width:90px">Job #</td>
+        <td style="width:120px">Customer</td>
+        <td style="width:140px">Work type</td>
+        <td style="width:90px">PM</td>
+        <td style="width:46px">Mon</td><td style="width:46px">Tue</td><td style="width:46px">Wed</td>
+        <td style="width:46px">Thu</td><td style="width:46px">Fri</td><td style="width:46px">Sat</td>
+        <td style="width:46px">Sun</td><td class="tot-cell">Total</td><td style="width:30px"></td>
+      </tr>
+      </tbody><tbody id="bill-tbody"></tbody>
+    </table></div>
+    <div style="margin-top:6px"><button type="button" class="add-row" id="add-bill-btn">+ Add billable row</button></div>
+  </div>
+
+  <div class="card">
+    <div class="sect-hdr sect-hdr-util">
+      <span class="badge badge-util">Utilized</span>
+      <span class="title">Internal / company work</span>
+      <span class="desc">CapEx support · Warranty · Shop support · Sales support · Training</span>
+    </div>
+    <div class="ts-wrap"><table class="ts-table" id="util-table">
+      <tbody><tr class="ts-hdr">
+        <td style="width:130px">Project # (if applicable)</td>
+        <td style="width:130px">Notes</td>
+        <td style="width:140px">Work type</td>
+        <td style="width:90px">PM</td>
+        <td style="width:46px">Mon</td><td style="width:46px">Tue</td><td style="width:46px">Wed</td>
+        <td style="width:46px">Thu</td><td style="width:46px">Fri</td><td style="width:46px">Sat</td>
+        <td style="width:46px">Sun</td><td class="tot-cell">Total</td><td style="width:30px"></td>
+      </tr>
+      </tbody><tbody id="util-tbody"></tbody>
+    </table></div>
+    <div style="margin-top:6px"><button type="button" class="add-row" id="add-util-btn">+ Add utilized row</button></div>
+  </div>
+
+  <div class="card">
+    <div class="sect-hdr sect-hdr-nonbill">
+      <span class="badge badge-nonbill">Non-billable</span>
+      <span class="title">PTO / Holiday / Sick — does not count toward utilization</span>
+    </div>
+    <div class="ts-wrap"><table class="ts-table" id="nonbill-table">
+      <tbody><tr class="ts-hdr">
+        <td style="width:160px">Type</td>
+        <td style="width:160px">Notes</td>
+        <td style="width:90px">PM</td>
+        <td style="width:46px">Mon</td><td style="width:46px">Tue</td><td style="width:46px">Wed</td>
+        <td style="width:46px">Thu</td><td style="width:46px">Fri</td><td style="width:46px">Sat</td>
+        <td style="width:46px">Sun</td><td class="tot-cell">Total</td><td style="width:30px"></td>
+      </tr>
+      </tbody><tbody id="nonbill-tbody"></tbody>
+    </table></div>
+    <div style="margin-top:6px"><button type="button" class="add-row" id="add-nonbill-btn">+ Add non-billable row</button></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:14px">Week summary</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px">
+      <div class="metric"><div class="lbl">Total hours</div><div class="val" id="s-total">0.0</div></div>
+      <div class="metric metric-bill"><div class="lbl">Billable hrs</div><div class="val" id="s-bill">0.0</div><div class="sub" id="s-bill-pct">0% of 40 avail</div></div>
+      <div class="metric metric-util"><div class="lbl">Utilized hrs</div><div class="val" id="s-util">0.0</div><div class="sub" id="s-util-pct">0% combined util</div></div>
+      <div class="metric metric-nonbill"><div class="lbl">Non-billable hrs</div><div class="val" id="s-nonbill">0.0</div><div class="sub">PTO / Holiday / Sick</div></div>
+      <div class="metric"><div class="lbl">ST hours</div><div class="val" id="s-st">0.0</div></div>
+      <div class="metric"><div class="lbl">OT hours</div><div class="val" id="s-ot">0.0</div></div>
+    </div>
+    <hr>
+    <div class="card-title" style="margin-bottom:12px;font-size:13px">Per diem</div>
+    <div class="grid3">
+      <div class="fld"><label>Full per diem days</label><input type="number" id="pd-full" min="0" step="1" value="0" oninput="calcSummary()"></div>
+      <div class="fld"><label>Partial per diem days</label><input type="number" id="pd-partial" min="0" step="1" value="0" oninput="calcSummary()"></div>
+      <div class="fld"><label>Total per diem ($)</label><input type="text" id="pd-total" readonly="" value="$0.00"></div>
+    </div>
+    <hr>
+    <div class="card-title" style="margin-bottom:10px;font-size:13px">Certification</div>
+    <div class="cert-block">All field and shop activity must be supported by a Service Project Number or SR number. Submission of this timesheet represents the personnel's claim for hours in accordance with current policy. Paradigm Controls of Texas has a Zero Tolerance Policy for falsification of time.</div>
+    <div class="grid2">
+      <div class="fld"><label>Tech signature (type full name to certify)</label><input type="text" id="ts-sig" placeholder="Type full name"></div>
+      <div class="fld"><label>Manager sign-off</label><input type="text" id="ts-mgr-sig" placeholder="Manager name"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="submit-btn" onclick="submitTimesheet()">Submit timesheet</button>
+      <button class="btn" onclick="clearTimesheet()">Clear form</button>
+      <button class="btn" style="margin-left:auto" onclick="showPage(&#39;payroll&#39;)">View payroll output</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAYROLL OUTPUT -->
+<div class="page" id="page-payroll">
+  <div class="card">
+    <div class="card-head">
+      <div><div class="card-title">Payroll output — Tech Time Template format</div><div class="card-sub">Auto-populated from submitted timesheets. Export to send to accounting.</div></div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <select id="pr-week-filter" style="width:150px" onchange="renderPayroll()"><option value="all">All weeks</option><option>2026-04-26</option><option>2026-05-03</option></select>
+        <select id="pr-tech-filter" style="width:140px" onchange="renderPayroll()"><option value="all">All techs</option><option>Charlie White</option><option>Jason Youngblood</option><option>Scott Schmelter</option><option>Alberto Solis</option></select>
+        <button class="btn btn-primary btn-sm" onclick="exportPayrollCSV()">Export CSV</button>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Tech name</th><th>Week ending</th><th>ST hrs</th><th>OT hrs</th><th>PTO hrs</th><th>Holiday hrs</th><th>BRV hrs</th><th>Total hrs</th><th>Per diem</th><th>Billable %</th><th>Status</th></tr></thead>
+        <tbody id="payroll-tbody"><tr><td colspan="11" class="empty">No timesheets submitted yet</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:14px">Period totals</div>
+    <div class="grid4">
+      <div class="metric"><div class="lbl">Total ST hrs</div><div class="val" id="pr-st">—</div></div>
+      <div class="metric"><div class="lbl">Total OT hrs</div><div class="val" id="pr-ot">—</div></div>
+      <div class="metric"><div class="lbl">PTO + Holiday</div><div class="val" id="pr-pto">—</div></div>
+      <div class="metric"><div class="lbl">Total per diem</div><div class="val" id="pr-pd">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- UTILIZATION -->
+<div class="page" id="page-utilization">
+  <div class="card">
+    <div class="card-head">
+      <div><div class="card-title">Utilization dashboard</div><div class="card-sub">Billable = charged to customer &nbsp;|&nbsp; Utilized = internal work &nbsp;|&nbsp; Non-billable = PTO/Holiday/Sick</div></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select id="ut-week-filter" style="width:150px" onchange="renderUtil()"><option value="all">All weeks</option><option>2026-04-26</option><option>2026-05-03</option></select>
+        <button class="btn btn-sm" onclick="exportUtilCSV()">Export CSV</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px">
+      <div class="metric metric-bill"><div class="lbl">Billable util %</div><div class="val" id="ut-bill-pct">—</div><div class="sub">Billable / available</div></div>
+      <div class="metric metric-util"><div class="lbl">Combined util %</div><div class="val" id="ut-comb-pct">—</div><div class="sub">Billable + utilized / avail</div></div>
+      <div class="metric metric-bill"><div class="lbl">Total billable hrs</div><div class="val" id="ut-bill-hrs">—</div></div>
+      <div class="metric metric-util"><div class="lbl">Total utilized hrs</div><div class="val" id="ut-util-hrs">—</div></div>
+      <div class="metric"><div class="lbl">Total available hrs</div><div class="val" id="ut-avail-hrs">—</div></div>
+      <div class="metric metric-nonbill"><div class="lbl">Non-billable hrs</div><div class="val" id="ut-nonbill-hrs">—</div></div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px">Billable utilization by tech</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green-mid)"></div>On target (70%+)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber-mid)"></div>Below target (50-69%)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Low (under 50%)</div>
+      </div>
+      <div id="ut-bill-bars"><div class="empty">No data yet</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px">Combined utilization by tech</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green-mid)"></div>Billable</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blue-mid)"></div>Utilized (internal)</div>
+      </div>
+      <div id="ut-comb-bars"><div class="empty">No data yet</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:14px">Detail by tech</div>
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Tech</th><th>Available hrs</th><th>Billable hrs</th><th>Utilized hrs</th><th>Non-bill hrs</th><th>Billable %</th><th>Combined util %</th><th>YTD bill % / util %</th><th>Status</th></tr></thead>
+        <tbody id="ut-detail-tbody"><tr><td colspan="8" class="empty">No data yet</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- CONTRACTORS -->
+<div class="page" id="page-contractors">
+  <div class="alert alert-info">Contractor utilization is tracked separately. Enter hours manually from your SharePoint dispatch calendar, or connect Power Automate to auto-sync (see Admin tab).</div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:14px">Add contractor hours</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 130px 110px 110px 100px auto;gap:8px;align-items:end">
+      <div class="fld" style="margin:0"><label>Contractor name</label><input type="text" id="ct-name" placeholder="Full name"></div>
+      <div class="fld" style="margin:0"><label>Company</label><input type="text" id="ct-co" placeholder="Company"></div>
+      <div class="fld" style="margin:0"><label>Week ending</label><input type="date" id="ct-week"></div>
+      <div class="fld" style="margin:0"><label>Dispatched hrs</label><input type="number" id="ct-disp" min="0" step="0.5" value="0"></div>
+      <div class="fld" style="margin:0"><label>Billable hrs</label><input type="number" id="ct-bill" min="0" step="0.5" value="0"></div>
+      <div class="fld" style="margin:0"><label>Category</label><select id="ct-cat"><option value="bill">Billable</option><option value="util">Utilized</option></select></div>
+      <button class="btn btn-primary" onclick="addContractor()" style="align-self:end">Add</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-title">Contractor log</div><button class="btn btn-sm" onclick="exportContractorCSV()">Export CSV</button></div>
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>Company</th><th>Week ending</th><th>Dispatched hrs</th><th>Billable hrs</th><th>Category</th><th>Util %</th><th></th></tr></thead>
+        <tbody id="ct-tbody"><tr><td colspan="8" class="empty">No contractors added</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- PM APPROVAL -->
+<div class="page" id="page-pmapproval">
+  <div class="card">
+    <div class="card-head">
+      <div><div class="card-title">PM Approval Queue</div><div class="card-sub">Timesheets pending your review. Approve or reject each submission.</div></div>
+    </div>
+    <div id="pm-approval-list"><div class="empty">No timesheets pending PM approval.</div></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-title" style="margin-bottom:14px">Recently actioned</div>
+    <div id="pm-actioned-list"><div class="empty">No recently actioned timesheets.</div></div>
+  </div>
+</div>
+
+<!-- MANAGER APPROVAL -->
+<div class="page" id="page-mgrapproval">
+  <div class="card">
+    <div class="card-head">
+      <div><div class="card-title">Service Manager Approval — Jessie Lozano</div><div class="card-sub">Timesheets approved by PM and awaiting your final sign-off.</div></div>
+    </div>
+    <div id="mgr-approval-list"><div class="empty">No timesheets pending manager approval.</div></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-title" style="margin-bottom:14px">Recently approved (final)</div>
+    <div id="mgr-actioned-list"><div class="empty">No recently finalized timesheets.</div></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+  <div id="sp-status" class="alert alert-success" style="margin-bottom:16px">SharePoint connected. Payroll and Utilization tabs read live data from FS_Timesheets.</div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px">Tech roster</div>
+      <div id="tech-roster-list"></div>
+      <hr>
+      <div style="display:grid;grid-template-columns:1fr 80px auto;gap:8px;align-items:end">
+        <div class="fld" style="margin:0"><label>Full name</label><input type="text" id="new-tech-name" placeholder="First Last"></div>
+        <div class="fld" style="margin:0"><label>Std hrs/wk</label><input type="number" id="new-tech-hrs" value="40" min="1" max="80"></div>
+        <button class="btn btn-primary btn-sm" onclick="addTech()" style="align-self:end">Add</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px">Work type classification</div>
+      <table class="data-table">
+        <thead><tr><th>Work type</th><th>Category</th></tr></thead>
+        <tbody>
+          <tr><td>Onsite work</td><td><span class="badge badge-bill">Billable</span></td></tr>
+          <tr><td>Job related travel</td><td><span class="badge badge-bill">Billable</span></td></tr>
+          <tr><td>Standby time</td><td><span class="badge badge-bill">Billable</span></td></tr>
+          <tr><td>Job preparation</td><td><span class="badge badge-bill">Billable</span></td></tr>
+          <tr><td>Offsite billable</td><td><span class="badge badge-bill">Billable</span></td></tr>
+          <tr><td>On job training</td><td><span class="badge badge-bill">Billable</span></td></tr>
+          <tr><td>Reporting</td><td><span class="badge badge-bill">Billable</span></td></tr>
+          <tr><td>CapEx support</td><td><span class="badge badge-util">Utilized</span></td></tr>
+          <tr><td>Warranty</td><td><span class="badge badge-util">Utilized</span></td></tr>
+          <tr><td>Shop support</td><td><span class="badge badge-util">Utilized</span></td></tr>
+          <tr><td>Employee training</td><td><span class="badge badge-util">Utilized</span></td></tr>
+          <tr><td>Sales support</td><td><span class="badge badge-util">Utilized</span></td></tr>
+          <tr><td>PTO / Vacation</td><td><span class="badge badge-nonbill">Non-billable</span></td></tr>
+          <tr><td>Holiday</td><td><span class="badge badge-nonbill">Non-billable</span></td></tr>
+          <tr><td>Sick day</td><td><span class="badge badge-nonbill">Non-billable</span></td></tr>
+          <tr><td>Jury duty</td><td><span class="badge badge-nonbill">Non-billable</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px">SharePoint deployment guide</div>
+    <div class="alert alert-info" style="margin-bottom:16px">This file is self-contained — no server, no install. Runs entirely in the browser.</div>
+    <div class="grid2">
+      <div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:8px">Step 1 — Embed on SharePoint (10 min, no IT needed)</div>
+        <ol style="font-size:13px;color:var(--text2);line-height:2.2;padding-left:1.2rem">
+          <li>Save this file as <code style="background:var(--surface2);padding:1px 5px;border-radius:4px;font-size:12px">pctx-timesheet.html</code></li>
+          <li>Upload to a SharePoint document library (e.g. FS Tools)</li>
+          <li>Create or edit a SharePoint page</li>
+          <li>Click Edit, add web part, choose <strong>Embed</strong></li>
+          <li>Paste the document URL into the embed field</li>
+          <li>Save and publish the page</li>
+        </ol>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:8px">Step 2 — Shared data across all users (IT, ~1 hr)</div>
+        <ol style="font-size:13px;color:var(--text2);line-height:2.2;padding-left:1.2rem">
+          <li>IT creates a SharePoint List: <strong>FS_Timesheets</strong></li>
+          <li>Columns: Tech, WeekEnding, BillHrs, UtilHrs, NonBillHrs, ST, OT, PTO, HOL, PerDiem</li>
+          <li>Add Power Automate flow to write to list on submit</li>
+          <li>Update submitTimesheet() to POST to the SharePoint List API</li>
+          <li>All tabs read live data — shared across all users instantly</li>
+        </ol>
+        <div style="margin-top:12px;font-size:13px;color:var(--text2)"><strong>Step 3 — Contractor calendar sync:</strong> Power Automate reads your dispatch calendar each Monday and writes to a FS_Contractors list automatically.</div>
+      </div>
+    </div>
+    <hr>
+    <button class="btn btn-sm" onclick="clearAllData()">Clear all stored data</button>
+    <span style="font-size:12px;color:var(--text3);margin-left:10px">Resets all timesheets and contractor entries stored in this browser session</span>
+  </div>
+</div>
+
+<script>
+const BILL_TYPES=['ONSITE WORK','JOB RELATED TRAVEL','STANDBY TIME','JOB PREPARATION','OFFSITE BILLABLE TIME','SITE SPECIFIC TRAINING','ON JOB TRAINING','ON JOB TRAINING TRAVEL','REPORTING'];
+const UTIL_TYPES=['CAPEX SUPPORT','WARRANTY','WARRANTY TRAVEL','SHOP SUPPORT','SALES SUPPORT','EMPLOYEE TRAINING','NON-BILLABLE TRAVEL','SITE WALK'];
+const NB_TYPES=['PTO / VACATION','HOLIDAY','SICK DAY','JURY DUTY','BEREAVEMENT','OTHER'];
+const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const PD_FULL=60,PD_PART=30;
+
+// ═══════════════════════════════════════════════════════
+// SHAREPOINT CONFIG — paste values from IT here
+// ═══════════════════════════════════════════════════════
+const SP_CONFIG = {
+  FLOW_URL: 'https://defaultb0b4a7882bce4878b51340d63c996b.35.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/e69f7e84254f40a4b3b382ca0cb00fe4/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2X3UKDdz7XSUhNfbPOf0-5MBjwtrYZuUj7X7VURWYwY',
+  SITE_URL: 'https://pctx.sharepoint.com/sites/PCTXHVACServices',
+  LIST_NAME: 'FS_Timesheets'
+};
+// ═══════════════════════════════════════════════════════
+
+const SP_CONNECTED = SP_CONFIG.FLOW_URL.length > 0;
+
+
+// ═══════════════════════════════════════════════════════
+// APPROVAL WORKFLOW CONFIG
+// ═══════════════════════════════════════════════════════
+const PM_EMAILS = {
+  'Andres Catacoly':  'Andres.catacoly@pctx.us',
+  'Mike Nguyen':      'mike.nguyen@pctx.us',
+  'Jessie Lozano':    'jessie.lozano@pctx.us',
+  'Savannah Prado':   'savannah.prado@pctx.us',
+  'Rick Kelsey':      'rick.kelsey@pctx.us',
+  'Alejandra Walding':'alejandra.walding@pctx.us'
+};
+const SERVICE_MANAGER = { name:'Jessie Lozano', email:'jessie.lozano@pctx.us' };
+const EMAIL_FLOW_URL = 'https://defaultb0b4a7882bce4878b51340d63c996b.35.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/14/workflows/a65c9723f4cc4b4e82824c57a520c244/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=83LC6pZHJCu6ZKFiGsH1DiqyLNCHbYR91n6nLUWBNKA';
+const PAYROLL_EMAIL   = 'kathy.sanchez@pctx.us';
+// Statuses: 'pending_pm' | 'pending_manager' | 'approved' | 'rejected_by_pm' | 'rejected_by_manager'
+// ═══════════════════════════════════════════════════════
+
+let techs=[{name:'Charlie White',hrs:40},{name:'Jason Youngblood',hrs:40},{name:'Scott Schmelter',hrs:40},{name:'Alberto Solis',hrs:40}];
+let timesheets=[],contractors=[];
+let rows={bill:[],util:[],nonbill:[]},rowData={};
+let spData=[];
+
+function load(){
+  try{
+    const t=localStorage.getItem('pctx_techs');if(t)techs=JSON.parse(t);
+    const ts=localStorage.getItem('pctx_ts');if(ts)timesheets=JSON.parse(ts);
+    const ct=localStorage.getItem('pctx_ct');if(ct)contractors=JSON.parse(ct);
+  }catch(e){}
+}
+function save(){
+  try{
+    localStorage.setItem('pctx_techs',JSON.stringify(techs));
+    localStorage.setItem('pctx_ts',JSON.stringify(timesheets));
+    localStorage.setItem('pctx_ct',JSON.stringify(contractors));
+  }catch(e){}
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  ['timesheet','payroll','utilization','contractors','pmapproval','mgrapproval','admin'].forEach((p,i)=>{if(p===id)document.querySelectorAll('.nav-tab')[i].classList.add('active');});
+  if(id==='payroll') SP_CONNECTED ? fetchAndRenderPayroll() : renderPayroll();
+  if(id==='utilization') SP_CONNECTED ? fetchAndRenderUtil() : renderUtil();
+  if(id==='contractors')renderContractors();
+  if(id==='admin')renderAdmin();
+}
+
+function updateNavWeek(){const w=document.getElementById('ts-week').value;document.getElementById('nav-week').textContent=w?'Week: '+w:'';}
+function buildTechDrop(){const s=document.getElementById('ts-tech'),cur=s.value;s.innerHTML='<option value="">Select tech...</option>'+techs.map(t=>`<option${t.name===cur?' selected':''}>${t.name}</option>`).join('');}
+
+function addRow(sect){
+  const id='r'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  rows[sect].push(id);rowData[id]={sect};
+  const dayStyle='width:46px;font-size:12px;padding:5px 2px;border:1px solid var(--border-light);border-radius:var(--radius);text-align:center;background:var(--surface);color:var(--text);font-family:inherit';
+  const inStyle='font-size:12px;width:100%';
+  
+  const dayCells=DAYS.map(d=>`<td><input type="number" id="${d}-${id}" min="0" max="24" step="0.5" style="${dayStyle}"></td>`).join('');
+  const pmCell=`<td><select id="pm-${id}" style="font-size:12px;width:90px;"><option value="">-- PM --</option>
+<option value="AC">Andres Catacoly</option>
+<option value="MN">Mike Nguyen</option>
+<option value="JL">Jessie Lozano</option>
+<option value="SP">Savannah Prado</option>
+<option value="RK">Rick Kelsey</option>
+<option value="AW">Alejandra Walding</option></select></td>`;
+  let descCells='';
+  if(sect==='bill'){
+    descCells=`<td><input type="text" id="p1-${id}" placeholder="Project # / SR #" style="${inStyle}"></td>
+      <td><input type="text" id="p4-${id}" placeholder="Job #" style="${inStyle}"></td>
+      <td><input type="text" id="p2-${id}" placeholder="Customer name" style="${inStyle}"></td>
+      <td><select id="p3-${id}" style="${inStyle}">${BILL_TYPES.map(x=>`<option>${x}</option>`).join('')}</select></td>`;
+  } else if(sect==='util'){
+    descCells=`<td><input type="text" id="p1-${id}" placeholder="Project # (optional)" style="${inStyle}"></td>
+      <td><input type="text" id="p2-${id}" placeholder="Notes" style="${inStyle}"></td>
+      <td><select id="p3-${id}" style="${inStyle}">${UTIL_TYPES.map(x=>`<option>${x}</option>`).join('')}</select></td>`;
+  } else {
+    descCells=`<td><select id="p3-${id}" style="${inStyle}">${NB_TYPES.map(x=>`<option>${x}</option>`).join('')}</select></td>
+      <td><input type="text" id="p2-${id}" placeholder="Notes" style="${inStyle}"></td>`;
+  }
+  const row=document.createElement('tr');
+  row.className='ts-row';row.id='row-'+id;
+  row.innerHTML=`${descCells}${pmCell}${dayCells}<td class="tot-cell"><span id="tot-${id}">0</span></td><td><button type="button" class="rm-btn" id="rm-${id}">x</button></td>`;
+  document.getElementById(sect+'-tbody').appendChild(row);
+  DAYS.forEach(d=>{document.getElementById(d+'-'+id).addEventListener('input',()=>rowChange(id));});
+  document.getElementById('rm-'+id).addEventListener('click',()=>rmRow(id,sect));
+}
+
+function rowChange(id){
+  const t=DAYS.reduce((s,d)=>s+(parseFloat(document.getElementById(d+'-'+id)?.value||0)||0),0);
+  document.getElementById('tot-'+id).textContent=t.toFixed(1);
+  calcSummary();
+}
+function rmRow(id,sect){document.getElementById('row-'+id)?.remove();rows[sect]=rows[sect].filter(r=>r!==id);delete rowData[id];calcSummary();}
+function getRT(id){return DAYS.reduce((s,d)=>s+(parseFloat(document.getElementById(d+'-'+id)?.value||0)||0),0);}
+
+function calcSummary(){
+  const bill=rows.bill.reduce((s,id)=>s+getRT(id),0);
+  const util=rows.util.reduce((s,id)=>s+getRT(id),0);
+  const nb=rows.nonbill.reduce((s,id)=>s+getRT(id),0);
+  const work=bill+util;
+  const techName=document.getElementById('ts-tech').value;
+  const avail=techs.find(t=>t.name===techName)?.hrs||40;
+  const st=Math.min(work,avail),ot=Math.max(0,work-avail);
+  document.getElementById('s-total').textContent=(bill+util+nb).toFixed(1);
+  document.getElementById('s-bill').textContent=bill.toFixed(1);
+  document.getElementById('s-util').textContent=util.toFixed(1);
+  document.getElementById('s-nonbill').textContent=nb.toFixed(1);
+  document.getElementById('s-st').textContent=st.toFixed(1);
+  document.getElementById('s-ot').textContent=ot.toFixed(1);
+  document.getElementById('s-bill-pct').textContent=Math.round((bill/avail)*100)+'% of '+avail+' avail';
+  document.getElementById('s-util-pct').textContent=Math.round((work/avail)*100)+'% combined util';
+  const pf=parseInt(document.getElementById('pd-full').value||0)||0;
+  const pp=parseInt(document.getElementById('pd-partial').value||0)||0;
+  document.getElementById('pd-total').value='$'+((pf*PD_FULL)+(pp*PD_PART)).toFixed(2);
+}
+
+async function submitTimesheet(){
+  const tech=document.getElementById('ts-tech').value;
+  const week=document.getElementById('ts-week').value;
+  const sig=document.getElementById('ts-sig').value.trim();
+  if(!tech){alert('Please select a tech name.');return;}
+  if(!week){alert('Please enter the week ending date.');return;}
+  if(!sig){alert('Please type your full name to certify.');return;}
+  const bill=rows.bill.reduce((s,id)=>s+getRT(id),0);
+  const util=rows.util.reduce((s,id)=>s+getRT(id),0);
+  const nb=rows.nonbill.reduce((s,id)=>s+getRT(id),0);
+  const work=bill+util;
+  const avail=techs.find(t=>t.name===tech)?.hrs||40;
+  const ptoHrs=rows.nonbill.filter(id=>['PTO / VACATION','SICK DAY'].includes(document.getElementById('p3-'+id)?.value||'')).reduce((s,id)=>s+getRT(id),0);
+  const holHrs=rows.nonbill.filter(id=>(document.getElementById('p3-'+id)?.value||'').includes('HOLIDAY')).reduce((s,id)=>s+getRT(id),0);
+  const brvHrs=rows.nonbill.filter(id=>(document.getElementById('p3-'+id)?.value||'').includes('BEREAVEMENT')).reduce((s,id)=>s+getRT(id),0);
+  // Build per-PM row breakdown for multi-PM approval tracking
+  const pmRowMap={};// {pmName: [{type,workType,hrs}]}
+  [...rows.bill,...rows.util,...rows.nonbill].forEach(id=>{
+    const pmEl=document.getElementById('pm-'+id);
+    const pmName=pmEl?pmEl.options[pmEl.selectedIndex]?.text||'':'';
+    if(!pmName||pmName==='-- PM --')return;
+    const typeEl=document.getElementById('p3-'+id);
+    const workType=typeEl?typeEl.value||typeEl.options[typeEl.selectedIndex]?.text||'':'';
+    const hrs=getRT(id);
+    if(!pmRowMap[pmName])pmRowMap[pmName]=[];
+    pmRowMap[pmName].push({workType,hrs});
+  });
+  const pmNames=Object.keys(pmRowMap);
+  const pms=pmNames.join(', ');
+  // Build approval tracking: each PM starts as 'pending'
+  const pmApprovals={};
+  pmNames.forEach(name=>{pmApprovals[name]='pending';});
+  // Safe percentage: send as decimal (0.75) so SharePoint % columns display correctly (75%)
+  const billPctDecimal = avail > 0 ? Math.round((bill / avail) * 100) / 100 : 0;
+  const combPctDecimal = avail > 0 ? Math.round((work / avail) * 100) / 100 : 0;
+  // ST/OT based only on worked (billable + utilized) hours, not non-billable
+  const st = Math.min(work, avail);
+  const ot = Math.max(0, work - avail);
+  // Integer display percentages for local use
+  const billPct = Math.round(billPctDecimal * 100);
+  const combPct = Math.round(combPctDecimal * 100);
+
+  const entry={tech,week,pm:pms,pmRowMap,pmApprovals,status:'pending_pm',bill,util,nonbill:nb,work,total:bill+util+nb,st,ot,ptoHrs,holHrs,brvHrs,avail,billPct,combPct,pd:document.getElementById('pd-total').value,sig,mgrSig:document.getElementById('ts-mgr-sig').value,submitted:new Date().toISOString()};
+
+  // Always save locally as backup
+  timesheets=timesheets.filter(t=>!(t.tech===tech&&t.week===week));
+  timesheets.push(entry);save();updateDrops();
+
+  // POST to Power Automate
+  if(SP_CONNECTED){
+    try{
+      setSubmitState('Submitting to SharePoint...', true);
+      const res=await fetch(SP_CONFIG.FLOW_URL,{
+        method:'POST',
+        mode:'cors',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          Title:       entry.tech + ' — ' + entry.week,
+          Tech:        entry.tech,
+          WeekEnding:  entry.week,
+          BillHrs:     parseFloat(entry.bill.toFixed(2)),
+          UtilHrs:     parseFloat(entry.util.toFixed(2)),
+          NonBillHrs:  parseFloat(entry.nonbill.toFixed(2)),
+          ST:          parseFloat(entry.st.toFixed(2)),
+          OT:          parseFloat(entry.ot.toFixed(2)),
+          PTOHrs:      parseFloat(entry.ptoHrs.toFixed(2)),
+          HOLHrs:      parseFloat(entry.holHrs.toFixed(2)),
+          BRVHrs:      parseFloat(entry.brvHrs.toFixed(2)),
+          TotalHrs:    parseFloat(entry.total.toFixed(2)),
+          AvailHrs:    entry.avail,
+          PerDiem:     entry.pd,
+          BillPct:     billPctDecimal,
+          CombUtilPct: combPctDecimal,
+          PM:          entry.pm,
+          TechSig:     entry.sig,
+          MgrSig:      entry.mgrSig || '',
+          Submitted:   entry.submitted,
+          Status:      'pending_pm'
+        })
+      });
+      setSubmitState('Submit timesheet', false);
+      // Notify each PM about their rows
+      if(entry.pmApprovals){
+        Object.keys(entry.pmApprovals).forEach(pmName=>{
+          const pmEmail=PM_EMAILS[pmName];
+          if(!pmEmail)return;
+          const myRows=(entry.pmRowMap&&entry.pmRowMap[pmName])||[];
+          const rowSummary=myRows.map(r=>r.workType+(r.hrs?' — '+r.hrs+' hrs':'')).join('\n  ');
+          sendApprovalEmail({
+            to: pmEmail,
+            cc: SERVICE_MANAGER.email,
+            subject: `[PCTX] Timesheet needs your approval — ${entry.tech}, week of ${entry.week}`,
+            body: `Hi ${pmName},\n\n${entry.tech} has submitted their timesheet for the week ending ${entry.week} and your approval is required for the following rows:\n\n  ${rowSummary}\n\nPlease open the PCTX Timesheet app and go to PM Approval to review and approve your rows.\n\nTotal sheet: ST ${(entry.st||0).toFixed(1)} hrs | OT ${(entry.ot||0).toFixed(1)} hrs | Billable ${entry.billPct||0}%\n\nThank you.`
+          });
+        });
+      }
+      // no-cors mode returns an opaque response — we can't read status but if fetch resolves, it went through
+      const pmNamesList=Object.keys(entry.pmApprovals||{});
+      setSubmitState('Submit timesheet', false);
+      showSuccess('✓ Timesheet submitted. '+(pmNamesList.length>1?'All assigned PMs ('+pmNamesList.join(', ')+') have been notified.':'The assigned PM ('+entry.pm+') has been notified to review and approve.'));
+      renderPMApproval();renderMgrApproval();updateBadges();
+    }catch(e){
+      setSubmitState('Submit timesheet', false);
+      showSuccess('⚠ Saved locally but could not reach Power Automate. Check that your flow is turned on. Error: '+e.message);
+    }
+  } else {
+    showSuccess('Timesheet saved locally. SharePoint not connected.');
+  }
+}
+
+function setSubmitState(label, disabled){
+  const btn=document.getElementById('submit-btn');
+  if(!btn)return;
+  btn.textContent=label;btn.disabled=disabled;btn.style.opacity=disabled?'0.6':'1';
+}
+function showSuccess(msg){
+  const m=document.getElementById('ts-success');
+  m.textContent=msg;m.style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>m.style.display='none',6000);
+}
+
+function clearTimesheet(){
+  if(!confirm('Clear all entries?'))return;
+  ['bill','util','nonbill'].forEach(s=>{rows[s].forEach(id=>document.getElementById('row-'+id)?.remove());rows[s]=[];});
+  rowData={};
+  ['ts-tech','ts-title','ts-sig','ts-mgr-sig'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('ts-week').value='';
+  document.getElementById('pd-full').value=0;document.getElementById('pd-partial').value=0;
+  calcSummary();addRow('bill');addRow('util');addRow('nonbill');
+}
+
+function updateDrops(){
+  const weeks=[...new Set(timesheets.map(t=>t.week))].sort();
+  ['pr-week-filter','ut-week-filter'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const cur=el.value;el.innerHTML='<option value="all">All weeks</option>'+weeks.map(w=>`<option${w===cur?' selected':''}>${w}</option>`).join('');
+  });
+  const pt=document.getElementById('pr-tech-filter');if(!pt)return;
+  const cur=pt.value;pt.innerHTML='<option value="all">All techs</option>'+techs.map(t=>`<option${t.name===cur?' selected':''}>${t.name}</option>`).join('');
+}
+
+// ─── SHAREPOINT FETCH ───────────────────────────────────
+async function fetchSPData(){
+  if(!SP_CONNECTED) return timesheets;
+  try{
+    const url=`${SP_CONFIG.SITE_URL}/_api/web/lists/getbytitle('${SP_CONFIG.LIST_NAME}')/items?$top=5000&$select=Tech,WeekEnding,BillHrs,UtilHrs,NonBillHrs,ST,OT,PTOHrs,HOLHrs,BRVHrs,TotalHrs,PerDiem,BillPct,CombUtilPct,PM,TechSig,MgrSig,Submitted`;
+    const res=await fetch(url,{headers:{Accept:'application/json;odata=nometadata','Content-Type':'application/json'}});
+    if(!res.ok) throw new Error('SP fetch failed');
+    const json=await res.json();
+    return json.value.map(r=>({
+      tech:r.Tech,week:r.WeekEnding?.split('T')[0]||'',
+      bill:r.BillHrs||0,util:r.UtilHrs||0,nonbill:r.NonBillHrs||0,
+      st:r.ST||0,ot:r.OT||0,ptoHrs:r.PTOHrs||0,holHrs:r.HOLHrs||0,brvHrs:r.BRVHrs||0,
+      total:r.TotalHrs||0,pd:r.PerDiem||'$0.00',
+      billPct:r.BillPct||0,combPct:r.CombUtilPct||0,
+      avail:techs.find(t=>t.name===r.Tech)?.hrs||40,
+      pm:r.PM||'',sig:r.TechSig||'',mgrSig:r.MgrSig||'',submitted:r.Submitted||''
+    }));
+  }catch(e){
+    console.warn('SharePoint fetch failed, using local data:',e);
+    return timesheets;
+  }
+}
+
+// ─── PAYROLL ────────────────────────────────────────────
+async function fetchAndRenderPayroll(){
+  setLoadingState('payroll-tbody',11,'Loading from SharePoint...');
+  const data=await fetchSPData();
+  spData=data;
+  populatePayrollFilters(data);
+  renderPayrollData(data);
+}
+
+function renderPayroll(){
+  populatePayrollFilters(timesheets);
+  renderPayrollData(timesheets);
+}
+
+function populatePayrollFilters(data){
+  const weeks=[...new Set(data.map(t=>t.week))].sort();
+  const wf=document.getElementById('pr-week-filter');
+  const cur=wf?.value||'all';
+  if(wf) wf.innerHTML='<option value="all">All weeks</option>'+weeks.map(w=>`<option${w===cur?' selected':''}>${w}</option>`).join('');
+  const tf=document.getElementById('pr-tech-filter');
+  const tcur=tf?.value||'all';
+  const techNames=[...new Set(data.map(t=>t.tech))].sort();
+  if(tf) tf.innerHTML='<option value="all">All techs</option>'+techNames.map(n=>`<option${n===tcur?' selected':''}>${n}</option>`).join('');
+}
+
+function renderPayrollData(allData){
+  const wf=document.getElementById('pr-week-filter')?.value||'all';
+  const tf=document.getElementById('pr-tech-filter')?.value||'all';
+  const data=allData.filter(t=>(wf==='all'||t.week===wf)&&(tf==='all'||t.tech===tf));
+  const tb=document.getElementById('payroll-tbody');
+  if(!data.length){tb.innerHTML='<tr><td colspan="11" class="empty">No timesheets submitted yet</td></tr>';clearPayrollTotals();return;}
+  data.sort((a,b)=>a.week.localeCompare(b.week)||a.tech.localeCompare(b.tech));
+  tb.innerHTML=data.map(t=>{
+    const bg=t.billPct>=70?'badge-bill':t.billPct>=50?'badge-gray':'badge-red';
+    const lb=t.billPct>=70?'On target':t.billPct>=50?'Below target':'Low';
+    return `<tr>
+      <td style="font-weight:500">${t.tech}</td><td>${t.week}</td>
+      <td>${t.st.toFixed(1)}</td><td>${t.ot>0?t.ot.toFixed(1):'—'}</td>
+      <td>${t.ptoHrs>0?t.ptoHrs.toFixed(1):'—'}</td><td>${t.holHrs>0?t.holHrs.toFixed(1):'—'}</td>
+      <td>${t.brvHrs>0?t.brvHrs.toFixed(1):'—'}</td>
+      <td style="font-weight:500">${t.total.toFixed(1)}</td>
+      <td>${t.pd||'—'}</td><td>${t.billPct}%</td>
+      <td><span class="badge ${bg}">${lb}</span></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('pr-st').textContent=data.reduce((s,t)=>s+t.st,0).toFixed(1);
+  document.getElementById('pr-ot').textContent=data.reduce((s,t)=>s+t.ot,0).toFixed(1);
+  document.getElementById('pr-pto').textContent=data.reduce((s,t)=>s+t.ptoHrs+t.holHrs,0).toFixed(1);
+  document.getElementById('pr-pd').textContent='$'+data.reduce((s,t)=>s+parseFloat((t.pd||'$0').replace(/[$,]/g,'')),0).toFixed(2);
+}
+
+function clearPayrollTotals(){
+  ['pr-st','pr-ot','pr-pto','pr-pd'].forEach(id=>document.getElementById(id).textContent='—');
+}
+
+// ─── UTILIZATION ─────────────────────────────────────────
+async function fetchAndRenderUtil(){
+  setLoadingState('ut-detail-tbody',8,'Loading from SharePoint...');
+  const data=await fetchSPData();
+  spData=data;
+  populateUtilFilters(data);
+  renderUtilData(data);
+}
+
+function renderUtil(){
+  populateUtilFilters(timesheets);
+  renderUtilData(timesheets);
+}
+
+function populateUtilFilters(data){
+  const weeks=[...new Set(data.map(t=>t.week))].sort();
+  const wf=document.getElementById('ut-week-filter');
+  const cur=wf?.value||'all';
+  if(wf) wf.innerHTML='<option value="all">All weeks</option>'+weeks.map(w=>`<option${w===cur?' selected':''}>${w}</option>`).join('');
+}
+
+function renderUtilData(allData){
+  const wf=document.getElementById('ut-week-filter')?.value||'all';
+  const data=wf==='all'?allData:allData.filter(t=>t.week===wf);
+  const ids=['ut-bill-pct','ut-comb-pct','ut-bill-hrs','ut-util-hrs','ut-avail-hrs','ut-nonbill-hrs'];
+  if(!data.length){
+    ids.forEach(id=>document.getElementById(id).textContent='—');
+    document.getElementById('ut-bill-bars').innerHTML='<div class="empty">No data yet</div>';
+    document.getElementById('ut-comb-bars').innerHTML='<div class="empty">No data yet</div>';
+    document.getElementById('ut-detail-tbody').innerHTML='<tr><td colspan="9" class="empty">No data yet</td></tr>';
+    return;
+  }
+
+  // Overall totals
+  const totBill=data.reduce((s,t)=>s+t.bill,0);
+  const totUtil=data.reduce((s,t)=>s+t.util,0);
+  const totNB=data.reduce((s,t)=>s+t.nonbill,0);
+  const totAvail=data.reduce((s,t)=>s+t.avail,0);
+  document.getElementById('ut-bill-pct').textContent=totAvail?Math.round((totBill/totAvail)*100)+'%':'—';
+  document.getElementById('ut-comb-pct').textContent=totAvail?Math.round(((totBill+totUtil)/totAvail)*100)+'%':'—';
+  document.getElementById('ut-bill-hrs').textContent=totBill.toFixed(1);
+  document.getElementById('ut-util-hrs').textContent=totUtil.toFixed(1);
+  document.getElementById('ut-avail-hrs').textContent=totAvail.toFixed(0);
+  document.getElementById('ut-nonbill-hrs').textContent=totNB.toFixed(1);
+
+  // By tech — aggregate ALL weeks for running totals, then filter display
+  const ytdData=wf==='all'?allData:allData; // always use full dataset for YTD
+  const byT={};
+  techs.forEach(t=>{byT[t.name]={bill:0,util:0,nb:0,avail:0,ytdBill:0,ytdUtil:0,ytdAvail:0,weeks:0};});
+  // YTD always from full dataset
+  allData.forEach(t=>{
+    if(!byT[t.tech])byT[t.tech]={bill:0,util:0,nb:0,avail:0,ytdBill:0,ytdUtil:0,ytdAvail:0,weeks:0};
+    byT[t.tech].ytdBill+=t.bill;byT[t.tech].ytdUtil+=t.util;byT[t.tech].ytdAvail+=t.avail;byT[t.tech].weeks+=1;
+  });
+  // Filtered period
+  data.forEach(t=>{
+    if(!byT[t.tech])byT[t.tech]={bill:0,util:0,nb:0,avail:0,ytdBill:0,ytdUtil:0,ytdAvail:0,weeks:0};
+    byT[t.tech].bill+=t.bill;byT[t.tech].util+=t.util;byT[t.tech].nb+=t.nonbill;byT[t.tech].avail+=t.avail;
+  });
+
+  const active=Object.entries(byT).filter(([,d])=>d.avail>0||d.ytdAvail>0);
+
+  document.getElementById('ut-bill-bars').innerHTML=active.map(([n,d])=>{
+    const p=d.avail>0?Math.round((d.bill/d.avail)*100):0;
+    const col=p>=70?'var(--green-mid)':p>=50?'var(--amber-mid)':'var(--red)';
+    return `<div class="prog-row"><span class="prog-name">${n.split(' ')[0]}</span><div class="prog-track"><div class="prog-fill" style="width:${Math.min(p,100)}%;background:${col}"></div></div><span class="prog-pct">${p}%</span></div>`;
+  }).join('');
+
+  document.getElementById('ut-comb-bars').innerHTML=active.map(([n,d])=>{
+    const bp=d.avail>0?Math.min(Math.round((d.bill/d.avail)*100),100):0;
+    const up=d.avail>0?Math.min(Math.round((d.util/d.avail)*100),100-bp):0;
+    return `<div class="prog-row"><span class="prog-name">${n.split(' ')[0]}</span><div class="prog-track" style="position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${bp}%;background:var(--green-mid);border-radius:4px 0 0 4px"></div><div style="position:absolute;left:${bp}%;top:0;height:100%;width:${up}%;background:var(--blue-mid)"></div></div><span class="prog-pct">${bp+up}%</span></div>`;
+  }).join('');
+
+  document.getElementById('ut-detail-tbody').innerHTML=active.map(([n,d])=>{
+    const bp=d.avail>0?Math.round((d.bill/d.avail)*100):0;
+    const cp=d.avail>0?Math.round(((d.bill+d.util)/d.avail)*100):0;
+    const ytdBp=d.ytdAvail>0?Math.round((d.ytdBill/d.ytdAvail)*100):0;
+    const ytdCp=d.ytdAvail>0?Math.round(((d.ytdBill+d.ytdUtil)/d.ytdAvail)*100):0;
+    const bg=bp>=70?'badge-bill':bp>=50?'badge-gray':'badge-red';
+    const lb=bp>=70?'On target':bp>=50?'Below target':'Low';
+    return `<tr>
+      <td style="font-weight:500">${n}</td>
+      <td>${d.avail||'—'}</td>
+      <td>${d.bill>0?d.bill.toFixed(1):'—'}</td>
+      <td>${d.util>0?d.util.toFixed(1):'—'}</td>
+      <td>${d.nb>0?d.nb.toFixed(1):'—'}</td>
+      <td>${d.avail>0?bp+'%':'—'}</td>
+      <td>${d.avail>0?cp+'%':'—'}</td>
+      <td style="color:var(--text2);font-size:12px">${d.ytdAvail>0?ytdBp+'% / '+ytdCp+'%':'—'}</td>
+      <td><span class="badge ${bg}">${lb}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function setLoadingState(tbodyId, cols, msg){
+  const el=document.getElementById(tbodyId);
+  if(el) el.innerHTML=`<tr><td colspan="${cols}" class="empty" style="font-style:normal;color:var(--blue)">${msg}</td></tr>`;
+}
+
+// Filter change handlers — re-render from cached spData or local
+function onPayrollFilterChange(){SP_CONNECTED?renderPayrollData(spData):renderPayroll();}
+function onUtilFilterChange(){SP_CONNECTED?renderUtilData(spData):renderUtil();}
+
+function addContractor(){
+  const name=document.getElementById('ct-name').value.trim();
+  const week=document.getElementById('ct-week').value;
+  if(!name||!week){alert('Name and week ending are required.');return;}
+  contractors.push({name,co:document.getElementById('ct-co').value.trim(),week,disp:parseFloat(document.getElementById('ct-disp').value||0)||0,bill:parseFloat(document.getElementById('ct-bill').value||0)||0,cat:document.getElementById('ct-cat').value,id:'c'+Date.now()});
+  save();renderContractors();
+  ['ct-name','ct-co'].forEach(id=>document.getElementById(id).value='');
+  ['ct-disp','ct-bill'].forEach(id=>document.getElementById(id).value=0);
+}
+function removeContractor(id){contractors=contractors.filter(c=>c.id!==id);save();renderContractors();}
+function renderContractors(){
+  const tb=document.getElementById('ct-tbody');
+  if(!contractors.length){tb.innerHTML='<tr><td colspan="8" class="empty">No contractors added</td></tr>';return;}
+  tb.innerHTML=contractors.map(c=>{
+    const p=c.disp>0?Math.round((c.bill/c.disp)*100):0;
+    return `<tr><td style="font-weight:500">${c.name}</td><td>${c.co||'—'}</td><td>${c.week}</td><td>${c.disp}</td><td>${c.bill}</td><td><span class="badge ${c.cat==='bill'?'badge-bill':'badge-util'}">${c.cat==='bill'?'Billable':'Utilized'}</span></td><td>${p}%</td><td><button class="rm-btn" onclick="removeContractor('${c.id}')">x</button></td></tr>`;
+  }).join('');
+}
+
+function addTech(){
+  const n=document.getElementById('new-tech-name').value.trim();
+  const h=parseInt(document.getElementById('new-tech-hrs').value)||40;
+  if(!n)return;if(techs.find(t=>t.name===n)){alert('Already exists.');return;}
+  techs.push({name:n,hrs:h});save();buildTechDrop();renderAdmin();
+  document.getElementById('new-tech-name').value='';
+}
+function removeTech(n){if(!confirm('Remove '+n+'?'))return;techs=techs.filter(t=>t.name!==n);save();buildTechDrop();renderAdmin();}
+function renderAdmin(){
+  // Connection status banner
+  const statusEl=document.getElementById('sp-status');
+  if(statusEl){
+    if(SP_CONNECTED){
+      statusEl.className='alert alert-success';
+      statusEl.textContent='SharePoint connected. Payroll and Utilization tabs read live data from '+SP_CONFIG.LIST_NAME+'.';
+    } else {
+      statusEl.className='alert alert-warn';
+      statusEl.textContent='SharePoint not connected. Data is stored in this browser only. Paste your Power Automate URL and SharePoint site URL into the SP_CONFIG block in the HTML file to go live.';
+    }
+  }
+  document.getElementById('tech-roster-list').innerHTML=techs.map(t=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border-light)">
+      <span style="flex:1;font-size:13px;font-weight:500">${t.name}</span>
+      <span class="badge badge-gray">${t.hrs} hrs/wk</span>
+      <button class="btn btn-sm" onclick="removeTech('${t.name}')">Remove</button>
+    </div>`).join('');
+}
+
+function exportCSV(r,fn){const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(r.map(row=>row.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n'));a.download=fn;a.click();}
+function exportPayrollCSV(){
+  const src=SP_CONNECTED?spData:timesheets;
+  const wf=document.getElementById('pr-week-filter')?.value||'all';
+  const tf=document.getElementById('pr-tech-filter')?.value||'all';
+  const d=src.filter(t=>(wf==='all'||t.week===wf)&&(tf==='all'||t.tech===tf));
+  exportCSV([['Tech Name','Week Ending','ST Hrs','OT Hrs','PTO Hrs','Holiday Hrs','BRV Hrs','Total Hrs','Per Diem','Billable %','PM Initials'],...d.map(t=>[t.tech,t.week,t.st.toFixed(1),t.ot.toFixed(1),t.ptoHrs.toFixed(1),t.holHrs.toFixed(1),t.brvHrs.toFixed(1),t.total.toFixed(1),t.pd||'$0.00',t.billPct+'%',t.pm||'',t.status||'pending_pm'])],'PCTX_Payroll.csv');
+}
+function exportUtilCSV(){
+  const src=SP_CONNECTED?spData:timesheets;
+  const wf=document.getElementById('ut-week-filter')?.value||'all';
+  const d=src.filter(t=>wf==='all'||t.week===wf);
+  exportCSV([['Tech','Week Ending','Available Hrs','Billable Hrs','Utilized Hrs','Non-Billable Hrs','Billable %','Combined Util %'],...d.map(t=>[t.tech,t.week,t.avail,t.bill.toFixed(1),t.util.toFixed(1),t.nonbill.toFixed(1),t.billPct+'%',t.combPct+'%'])],'PCTX_Utilization.csv');
+}
+function exportContractorCSV(){
+  exportCSV([['Name','Company','Week Ending','Dispatched Hrs','Billable Hrs','Category','Util %'],...contractors.map(c=>[c.name,c.co,c.week,c.disp,c.bill,c.cat==='bill'?'Billable':'Utilized',c.disp>0?Math.round((c.bill/c.disp)*100)+'%':'—'])],'PCTX_Contractors.csv');
+}
+function clearAllData(){if(!confirm('Clear ALL stored data? Cannot be undone.'))return;timesheets=[];contractors=[];localStorage.removeItem('pctx_ts');localStorage.removeItem('pctx_ct');alert('Data cleared.');}
+
+
+// ─── APPROVAL WORKFLOW ───────────────────────────────────
+
+function getPendingPM(){ return timesheets.filter(t=>t.status==='pending_pm'); }
+function getPendingMgr(){ return timesheets.filter(t=>t.status==='pending_manager'); }
+
+function updateBadges(){
+  const pmCount=getPendingPM().length;
+  const mgrCount=getPendingMgr().length;
+  const pb=document.getElementById('pm-badge');
+  const mb=document.getElementById('mgr-badge');
+  if(pb){pb.textContent=pmCount;pb.style.display=pmCount>0?'inline-block':'none';}
+  if(mb){mb.textContent=mgrCount;mb.style.display=mgrCount>0?'inline-block':'none';}
+}
+
+function statusBadge(s){
+  const map={
+    'pending_pm':'<span class="badge badge-pending">Pending PM</span>',
+    'pending_manager':'<span class="badge badge-pm-approved">Pending Manager</span>',
+    'approved':'<span class="badge badge-approved">✓ Approved</span>',
+    'rejected_by_pm':'<span class="badge badge-rejected">✗ Rejected by PM</span>',
+    'rejected_by_manager':'<span class="badge badge-rejected">✗ Rejected by Manager</span>'
+  };
+  return map[s]||s;
+}
+
+function renderPMApproval(){
+  const pending=getPendingPM();
+  const actioned=timesheets.filter(t=>t.status!=='pending_pm');
+  const pl=document.getElementById('pm-approval-list');
+  const al=document.getElementById('pm-actioned-list');
+  if(!pl)return;
+
+  if(pending.length===0){
+    pl.innerHTML='<div class="empty">No timesheets pending PM approval.</div>';
+  } else {
+    pl.innerHTML=pending.map(t=>{
+      const approvals=t.pmApprovals||{};
+      const pmList=Object.keys(approvals);
+      const approvalStatus=pmList.map(p=>{
+        const s=approvals[p];
+        const dot=s==='approved'?'✓ ':s==='rejected'?'✗ ':'⏳ ';
+        return `<span style="margin-right:10px">${dot}${p}</span>`;
+      }).join('');
+      // Each PM gets their own approve/reject buttons
+      const pmButtons=pmList.map(p=>{
+        if(approvals[p]==='approved') return `<span style="font-size:12px;color:var(--green-dark);font-weight:600">✓ ${p} approved</span>`;
+        return `<div style="margin-bottom:6px"><strong style="font-size:12px">${p}:</strong>
+          <button class="btn btn-sm btn-approve" style="margin-left:6px" onclick="pmApprove('${t.tech}','${t.week}','${p}')">✓ Approve</button>
+          <button class="btn btn-sm btn-reject" style="margin-left:4px" onclick="pmReject('${t.tech}','${t.week}','${p}')">✗ Reject</button>
+        </div>`;
+      }).join('');
+      return `<div class="appr-row">
+        <div class="appr-info">
+          <div class="appr-name">${t.tech} &nbsp;<span style="font-size:12px;font-weight:400;color:var(--text3)">Week ending ${t.week}</span></div>
+          <div class="appr-meta">ST: ${(t.st||0).toFixed(1)} hrs &nbsp;·&nbsp; OT: ${(t.ot||0).toFixed(1)} hrs &nbsp;·&nbsp; Billable: ${t.billPct||0}% &nbsp;·&nbsp; Per diem: ${t.pd||'$0.00'}</div>
+          <div class="appr-meta" style="margin-top:4px">Submitted: ${t.submitted?new Date(t.submitted).toLocaleString():''} &nbsp;·&nbsp; Certified by: ${t.sig}</div>
+          ${t.pmRowMap?`<div class="appr-meta" style="margin-top:6px">
+            ${Object.entries(t.pmRowMap).map(([pm,rows])=>`<strong>${pm}:</strong> ${rows.map(r=>r.workType+(r.hrs?' ('+r.hrs+'h)':'')).join(', ')}`).join(' &nbsp;|&nbsp; ')}
+          </div>`:''}
+          <div style="margin-top:10px">${pmButtons}</div>
+          ${pmList.length>1?`<div class="appr-meta" style="margin-top:8px">Approval status: ${approvalStatus}</div>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  if(al){
+    if(actioned.length===0){
+      al.innerHTML='<div class="empty">No recently actioned timesheets.</div>';
+    } else {
+      al.innerHTML=actioned.slice().reverse().slice(0,10).map(t=>`
+        <div class="appr-row">
+          <div class="appr-info">
+            <div class="appr-name">${t.tech} &nbsp; ${statusBadge(t.status)}</div>
+            <div class="appr-meta">Week: ${t.week} &nbsp;·&nbsp; ${t.pm}</div>
+          </div>
+        </div>`).join('');
+    }
+  }
+  updateBadges();
+}
+
+function renderMgrApproval(){
+  const pending=getPendingMgr();
+  const approved=timesheets.filter(t=>t.status==='approved'||t.status==='rejected_by_manager');
+  const pl=document.getElementById('mgr-approval-list');
+  const al=document.getElementById('mgr-actioned-list');
+  if(!pl)return;
+
+  if(pending.length===0){
+    pl.innerHTML='<div class="empty">No timesheets pending manager approval.</div>';
+  } else {
+    pl.innerHTML=pending.map(t=>`
+      <div class="appr-row">
+        <div class="appr-info">
+          <div class="appr-name">${t.tech}</div>
+          <div class="appr-meta">Week ending: ${t.week} &nbsp;·&nbsp; ST: ${(t.st||0).toFixed(1)} hrs &nbsp;·&nbsp; OT: ${(t.ot||0).toFixed(1)} hrs &nbsp;·&nbsp; Billable: ${t.billPct||0}%</div>
+          <div class="appr-meta" style="margin-top:4px">PM approved by: ${t.pm} &nbsp;·&nbsp; Submitted: ${t.submitted?new Date(t.submitted).toLocaleString():''}</div>
+        </div>
+        <div class="appr-actions">
+          <button class="btn btn-sm btn-approve" onclick="mgrApprove('${t.tech}','${t.week}')">✓ Final Approve</button>
+          <button class="btn btn-sm btn-reject" onclick="mgrReject('${t.tech}','${t.week}')">✗ Reject</button>
+        </div>
+      </div>`).join('');
+  }
+
+  if(al){
+    if(approved.length===0){
+      al.innerHTML='<div class="empty">No recently finalized timesheets.</div>';
+    } else {
+      al.innerHTML=approved.slice().reverse().slice(0,10).map(t=>`
+        <div class="appr-row">
+          <div class="appr-info">
+            <div class="appr-name">${t.tech} &nbsp; ${statusBadge(t.status)}</div>
+            <div class="appr-meta">Week: ${t.week}</div>
+          </div>
+        </div>`).join('');
+    }
+  }
+  updateBadges();
+}
+
+function updateTimesheetStatus(tech, week, newStatus){
+  const idx=timesheets.findIndex(t=>t.tech===tech&&t.week===week);
+  if(idx<0)return null;
+  timesheets[idx].status=newStatus;
+  save();
+  // POST status update to Flow
+  if(SP_CONNECTED){
+    fetch(SP_CONFIG.FLOW_URL,{
+      method:'POST',
+      mode:'cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        Title: tech+' — '+week,
+        Tech: tech,
+        WeekEnding: week,
+        Status: newStatus,
+        _action: 'status_update'
+      })
+    }).catch(()=>{});
+  }
+  return timesheets[idx];
+}
+
+function pmApprove(tech, week, pmName){
+  const idx=timesheets.findIndex(t=>t.tech===tech&&t.week===week);
+  if(idx<0)return;
+  const entry=timesheets[idx];
+  if(!entry.pmApprovals)entry.pmApprovals={};
+  entry.pmApprovals[pmName]='approved';
+  // Check if ALL PMs have approved
+  const allPMs=Object.keys(entry.pmApprovals);
+  const allApproved=allPMs.length>0&&allPMs.every(p=>entry.pmApprovals[p]==='approved');
+  if(allApproved){
+    entry.status='pending_manager';
+    save();
+    if(SP_CONNECTED){
+      fetch(SP_CONFIG.FLOW_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({Title:tech+' — '+week,Tech:tech,WeekEnding:week,Status:'pending_manager',_action:'status_update'})
+      }).catch(()=>{});
+    }
+    sendApprovalEmail({
+      to: SERVICE_MANAGER.email,
+      subject: `[PCTX] Timesheet ready for final approval — ${tech}, week of ${week}`,
+      body: `Hi ${SERVICE_MANAGER.name},
+
+All PMs have approved the timesheet for ${tech} (week ending ${week}).
+
+PM approvals: ${allPMs.join(', ')}
+ST: ${(entry.st||0).toFixed(1)} hrs | OT: ${(entry.ot||0).toFixed(1)} hrs | Billable: ${entry.billPct||0}%
+
+Please open the PCTX Timesheet app → Manager Approval to give final sign-off.
+
+Thank you.`
+    });
+    alert(`✓ You approved your rows. All PMs have now approved — forwarded to ${SERVICE_MANAGER.name} for final sign-off.`);
+  } else {
+    save();
+    const remaining=allPMs.filter(p=>entry.pmApprovals[p]==='pending');
+    alert(`✓ Your rows approved. Waiting on: ${remaining.join(', ')}`);
+  }
+  renderPMApproval();
+  renderPayroll();
+}
+
+function pmReject(tech, week, pmName){
+  const reason=prompt(`Reason for rejecting ${tech}'s timesheet (week ${week}):\n(The entire timesheet will be sent back to the tech)`);
+  if(reason===null)return;
+  const idx=timesheets.findIndex(t=>t.tech===tech&&t.week===week);
+  if(idx<0)return;
+  const entry=timesheets[idx];
+  entry.pmApprovals[pmName]='rejected';
+  entry.status='rejected_by_pm';
+  entry.rejectReason=`Rejected by ${pmName}: ${reason}`;
+  // Reset all other PM approvals so resubmission starts fresh
+  Object.keys(entry.pmApprovals).forEach(p=>{ entry.pmApprovals[p]='pending'; });
+  save();
+  if(SP_CONNECTED){
+    fetch(SP_CONFIG.FLOW_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({Title:tech+' — '+week,Tech:tech,WeekEnding:week,Status:'rejected_by_pm',_action:'status_update'})
+    }).catch(()=>{});
+  }
+  alert(`✗ Timesheet rejected and returned to ${tech}. They will be notified to correct and resubmit.`);
+  renderPMApproval();
+  renderPayroll();
+}
+
+function mgrApprove(tech, week){
+  const entry=updateTimesheetStatus(tech, week, 'approved');
+  if(!entry)return;
+  // Notify Kathy Sanchez
+  sendApprovalEmail({
+    to: PAYROLL_EMAIL,
+    subject: `[PCTX] Timesheet fully approved — process payroll for ${tech}, week of ${week}`,
+    body: `Hi Kathy,\n\nThe timesheet below has been fully approved and is ready to process.\n\nTech: ${tech}\nWeek Ending: ${week}\nST Hours: ${(entry.st||0).toFixed(1)}\nOT Hours: ${(entry.ot||0).toFixed(1)}\nPTO Hours: ${(entry.ptoHrs||0).toFixed(1)}\nHoliday Hours: ${(entry.holHrs||0).toFixed(1)}\nBereavement Hours: ${(entry.brvHrs||0).toFixed(1)}\nPer Diem: ${entry.pd||'$0.00'}\n\nApproved by PM: ${entry.pm}\nFinal approval by: ${SERVICE_MANAGER.name}\n\nPlease process at your earliest convenience.\n\nThank you.`
+  });
+  alert(`✓ Final approval complete. Kathy Sanchez has been notified to process payroll for ${tech}.`);
+  renderMgrApproval();
+  renderPayroll();
+}
+
+function mgrReject(tech, week){
+  const reason=prompt(`Reason for rejecting ${tech}'s timesheet (week ${week}):\n(This will be sent back to the PM)`);
+  if(reason===null)return;
+  const entry=updateTimesheetStatus(tech, week, 'rejected_by_manager');
+  if(!entry)return;
+  entry.rejectReason=reason;
+  save();
+  // Notify PM
+  if(entry.pmEmail){
+    sendApprovalEmail({
+      to: entry.pmEmail,
+      subject: `[PCTX] Timesheet returned for revision — ${tech}, week of ${week}`,
+      body: `Hi ${entry.pm},\n\n${SERVICE_MANAGER.name} has returned the timesheet for ${tech} (week ending ${week}) for revision.\n\nReason: ${reason}\n\nPlease review with the tech and resubmit.\n\nThank you.`
+    });
+  }
+  alert(`✗ Rejected and sent back to PM (${entry.pm}) for revision.`);
+  renderMgrApproval();
+  renderPayroll();
+}
+
+function sendApprovalEmail(options){
+  const {to, subject, body}=options;
+  const cc=options.cc||'';
+  if(typeof EMAIL_FLOW_URL!=='undefined'&&EMAIL_FLOW_URL){
+    fetch(EMAIL_FLOW_URL,{
+      method:'POST',
+      mode:'cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({to,cc,subject,body})
+    }).catch(err=>console.warn('Email flow error:',err));
+  } else {
+    const ccParam=cc?`&cc=${encodeURIComponent(cc)}`:'';
+    window.open(`mailto:${to}${ccParam}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,'_blank');
+  }
+}
+
+function checkRejectedTimesheets(){
+  const rejected=timesheets.filter(t=>
+    (t.status==='rejected_by_pm'||t.status==='rejected_by_manager')&&!t.rejectionSeen
+  );
+  if(rejected.length>0){
+    const names=rejected.map(t=>`${t.tech} (week ${t.week}): ${t.rejectReason||'No reason given'}`).join('\n');
+    alert(`⚠ The following timesheets were rejected and need to be corrected and resubmitted:\n\n${names}`);
+    rejected.forEach(t=>{t.rejectionSeen=true;});
+    save();
+  }
+}
+
+// ─── END APPROVAL WORKFLOW ───────────────────────────────
+
+document.addEventListener('DOMContentLoaded', function(){
+  load();buildTechDrop();renderAdmin();updateDrops();renderPMApproval();renderMgrApproval();updateBadges();checkRejectedTimesheets();
+  document.getElementById('add-bill-btn')?.addEventListener('click',()=>addRow('bill'));
+  document.getElementById('add-util-btn')?.addEventListener('click',()=>addRow('util'));
+  document.getElementById('add-nonbill-btn')?.addEventListener('click',()=>addRow('nonbill'));
+  document.getElementById('pr-week-filter')?.addEventListener('change',onPayrollFilterChange);
+  document.getElementById('pr-tech-filter')?.addEventListener('change',onPayrollFilterChange);
+  document.getElementById('ut-week-filter')?.addEventListener('change',onUtilFilterChange);
+  addRow('bill');addRow('util');addRow('nonbill');
+});
+
+</script>
+
+
+</body></html>
