@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCTX Field Service — Payroll Output</title>
+<style>
+:root{
+  --green:#2D6A2D;--green-light:#EAF3DE;--green-mid:#639922;--green-dark:#27500A;
+  --blue:#185FA5;--blue-light:#E6F1FB;--blue-mid:#378ADD;
+  --border:#D3D1C7;--border-light:#E8E6DF;
+  --bg:#FAFAF8;--surface:#FFFFFF;--surface2:#F7F6F2;
+  --text:#1A1A18;--text2:#5F5E5A;--text3:#888780;
+  --radius:8px;--radius-lg:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:13px}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100}
+.nav-brand{font-size:13px;font-weight:600;padding:16px 0;white-space:nowrap}
+.nav-brand span{color:var(--green-mid)}
+.page{padding:24px;max-width:1200px;margin:0 auto}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px}
+.card-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.card-sub{font-size:12px;color:var(--text3);margin-bottom:16px}
+.filters{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:20px}
+.fld{display:flex;flex-direction:column;gap:4px}
+label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.05em}
+input,select{padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text);background:var(--surface);font-family:inherit}
+input:focus,select:focus{outline:none;border-color:var(--green-mid)}
+.btn{padding:8px 18px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;cursor:pointer;background:var(--surface);color:var(--text);font-family:inherit;font-weight:500}
+.btn-primary{background:var(--green-dark);color:#fff;border-color:var(--green-dark)}
+.btn-primary:hover{opacity:.85}
+.btn-export{background:var(--blue-mid);color:#fff;border-color:var(--blue-mid)}
+.ts-block{border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:20px;overflow:hidden;page-break-inside:avoid}
+.ts-header{background:var(--surface2);padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.ts-name{font-size:15px;font-weight:700}
+.ts-meta{font-size:12px;color:var(--text3);margin-top:2px}
+.ts-summary{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+.ts-sum-cell{background:var(--surface);padding:10px 14px;text-align:center}
+.ts-sum-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:2px}
+.ts-sum-value{font-size:16px;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:var(--surface2);padding:8px 10px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:7px 10px;border-bottom:1px solid var(--border-light);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--surface2)}
+.section-badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700}
+.badge-bill{background:var(--green-light);color:var(--green-dark)}
+.badge-util{background:var(--blue-light);color:var(--blue-mid)}
+.badge-nonbill{background:#FEF3C7;color:#92400E}
+.total-row td{font-weight:700;background:var(--surface2);border-top:2px solid var(--border)}
+.empty{text-align:center;color:var(--text3);padding:40px;font-size:13px}
+.loading{text-align:center;color:var(--text3);padding:40px;font-size:13px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--green-mid);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.alert{padding:12px 16px;border-radius:var(--radius);font-size:13px;margin-bottom:16px;border:1px solid}
+.alert-error{background:#FCEBEB;color:#A32D2D;border-color:#E8AAAA}
+.approved-stamp{color:var(--green-dark);font-weight:700;font-size:12px}
+@media print{
+  .nav,.filters,.btn{display:none}
+  .ts-block{page-break-inside:avoid;margin-bottom:30px}
+  body{background:white}
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-brand"><span>PCTX</span> Field Service — Payroll Output</div>
+  <div style="margin-left:auto;display:flex;gap:8px">
+    <button class="btn btn-export" onclick="exportCSV()">⬇ Export CSV</button>
+    <button class="btn" onclick="window.print()">🖨 Print</button>
+  </div>
+</div>
+
+<div class="page">
+  <div class="card">
+    <div class="card-title">Approved Timesheets — Payroll Processing</div>
+    <div class="card-sub">Shows fully approved timesheets ready for payroll. Filter by date range to narrow results.</div>
+    <div class="filters">
+      <div class="fld">
+        <label>From (week ending)</label>
+        <input type="date" id="date-from">
+      </div>
+      <div class="fld">
+        <label>To (week ending)</label>
+        <input type="date" id="date-to">
+      </div>
+      <div class="fld">
+        <label>Tech</label>
+        <select id="filter-tech">
+          <option value="">All techs</option>
+          <option>Charlie White</option>
+          <option>Jason Youngblood</option>
+          <option>Scott Schmelter</option>
+          <option>Alberto Solis</option>
+        </select>
+      </div>
+      <div class="fld" style="justify-content:flex-end">
+        <button class="btn btn-primary" onclick="loadPayroll()">Load timesheets</button>
+      </div>
+    </div>
+    <div id="alert-area"></div>
+  </div>
+
+  <div id="payroll-output"><div class="empty">Select a date range and click Load timesheets.</div></div>
+</div>
+
+<script>
+const GET_FLOW = 'https://defaultb0b4a7882bce4878b51340d63c996b.35.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/29/workflows/1e23ff49b3e04c73baea2b66c3faccde/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=84bPRyWOpGQfOzGNGLi02HURFfkdYYzHM_4gJDIWN_s';
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+let allData = [];
+
+// Set default date range to current month
+const now = new Date();
+const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+document.getElementById('date-from').value = firstDay.toISOString().split('T')[0];
+document.getElementById('date-to').value = now.toISOString().split('T')[0];
+
+async function loadPayroll(){
+  document.getElementById('payroll-output').innerHTML = '<div class="loading"><span class="spinner"></span>Loading approved timesheets from SharePoint...</div>';
+  document.getElementById('alert-area').innerHTML = '';
+
+  try {
+    const res = await fetch(GET_FLOW, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({status: 'Approved', pm: ''})
+    });
+    const text = await res.text();
+    const data = JSON.parse(text);
+    const items = Array.isArray(data) ? data : (data.value || []);
+
+    // Filter approved only
+    allData = items
+      .filter(item => item.Status === 'Approved' || item.Status === 'approved')
+      .map(item => ({
+        id:         item.ID || item.id,
+        tech:       item.Tech || '',
+        week:       item.WeekEnding || '',
+        st:         parseFloat(item.ST || 0),
+        ot:         parseFloat(item.OT || 0),
+        ptoHrs:     parseFloat(item.PTOHrs || 0),
+        holHrs:     parseFloat(item.HOLHrs || 0),
+        brvHrs:     parseFloat(item.BRVHrs || 0),
+        totalHrs:   parseFloat(item.TotalHrs || 0),
+        billHrs:    parseFloat(item.BillHrs || 0),
+        utilHrs:    parseFloat(item.UtilHrs || 0),
+        nonBillHrs: parseFloat(item.NonBillHrs || 0),
+        perDiem:    item.PerDiem || '$0.00',
+        billPct:    item.BillPct || 0,
+        pm:         item.PM || '',
+        pmApproval: item.PMApproval || '',
+        mgrApproval:item.MgrApproval || '',
+        submitted:  item.Submitted || '',
+        rowDetail:  parseRowDetail(item.RowDetail)
+      }));
+
+    applyFilters();
+  } catch(e) {
+    document.getElementById('payroll-output').innerHTML = '';
+    document.getElementById('alert-area').innerHTML = `<div class="alert alert-error">Could not load timesheets: ${e.message}</div>`;
+  }
+}
+
+function parseRowDetail(rd){
+  if(!rd) return [];
+  try { return JSON.parse(rd); } catch(e){ return []; }
+}
+
+function applyFilters(){
+  const from = document.getElementById('date-from').value;
+  const to = document.getElementById('date-to').value;
+  const tech = document.getElementById('filter-tech').value;
+
+  let filtered = allData;
+  if(from) filtered = filtered.filter(t => t.week >= from);
+  if(to)   filtered = filtered.filter(t => t.week <= to);
+  if(tech) filtered = filtered.filter(t => t.tech === tech);
+
+  renderPayroll(filtered);
+}
+
+function renderPayroll(data){
+  if(data.length === 0){
+    document.getElementById('payroll-output').innerHTML = '<div class="empty">No approved timesheets found for the selected date range.</div>';
+    return;
+  }
+
+  // Sort by week then tech
+  data.sort((a,b) => a.week.localeCompare(b.week) || a.tech.localeCompare(b.tech));
+
+  document.getElementById('payroll-output').innerHTML = data.map(t => timesheetBlock(t)).join('');
+}
+
+function timesheetBlock(t){
+  const billPct = t.billPct < 1 ? Math.round(t.billPct*100) : Math.round(t.billPct);
+  const weekFmt = t.week ? new Date(t.week+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+
+  // Row detail table
+  let detailRows = '';
+  if(t.rowDetail && t.rowDetail.length > 0){
+    detailRows = t.rowDetail.map(r => {
+      const badgeClass = r.section==='Billable'?'badge-bill':r.section==='Utilized'?'badge-util':'badge-nonbill';
+      const dayHrs = DAYS.map(d => `<td style="text-align:center">${r.days&&r.days[d]?r.days[d].toFixed(1):''}</td>`).join('');
+      return `<tr>
+        <td><span class="section-badge ${badgeClass}">${r.section}</span></td>
+        <td>${r.proj||'—'}</td>
+        <td>${r.job||'—'}</td>
+        <td>${r.customer||'—'}</td>
+        <td>${r.workType||'—'}</td>
+        <td>${r.pm||'—'}</td>
+        ${dayHrs}
+        <td style="text-align:center;font-weight:600">${(r.total||0).toFixed(1)}</td>
+      </tr>`;
+    }).join('');
+
+    // Totals row
+    const dayTotals = DAYS.map(d => {
+      const sum = t.rowDetail.reduce((s,r) => s + (r.days&&r.days[d]?r.days[d]:0), 0);
+      return `<td style="text-align:center">${sum>0?sum.toFixed(1):''}</td>`;
+    }).join('');
+    detailRows += `<tr class="total-row">
+      <td colspan="6">TOTAL</td>
+      ${dayTotals}
+      <td style="text-align:center">${t.totalHrs.toFixed(1)}</td>
+    </tr>`;
+  } else {
+    detailRows = `<tr><td colspan="14" style="text-align:center;color:var(--text3);padding:16px">No row detail available — submit a new timesheet to capture project-level data.</td></tr>`;
+  }
+
+  return `
+  <div class="ts-block">
+    <div class="ts-header">
+      <div>
+        <div class="ts-name">${t.tech} <span class="approved-stamp">✓ APPROVED</span></div>
+        <div class="ts-meta">Week ending: ${weekFmt} &nbsp;·&nbsp; PM: ${t.pm} &nbsp;·&nbsp; Approved by: ${t.mgrApproval||'Jessie Lozano'}</div>
+      </div>
+      <div style="font-size:12px;color:var(--text3);text-align:right">
+        Submitted: ${t.submitted?new Date(t.submitted).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'—'}
+      </div>
+    </div>
+    <div class="ts-summary">
+      <div class="ts-sum-cell"><div class="ts-sum-label">ST Hours</div><div class="ts-sum-value">${t.st.toFixed(1)}</div></div>
+      <div class="ts-sum-cell"><div class="ts-sum-label">OT Hours</div><div class="ts-sum-value">${t.ot.toFixed(1)}</div></div>
+      <div class="ts-sum-cell"><div class="ts-sum-label">PTO</div><div class="ts-sum-value">${t.ptoHrs.toFixed(1)}</div></div>
+      <div class="ts-sum-cell"><div class="ts-sum-label">Holiday</div><div class="ts-sum-value">${t.holHrs.toFixed(1)}</div></div>
+      <div class="ts-sum-cell"><div class="ts-sum-label">Bereavement</div><div class="ts-sum-value">${t.brvHrs.toFixed(1)}</div></div>
+      <div class="ts-sum-cell"><div class="ts-sum-label">Per Diem</div><div class="ts-sum-value" style="font-size:13px">${t.perDiem}</div></div>
+      <div class="ts-sum-cell"><div class="ts-sum-label">Billable %</div><div class="ts-sum-value">${billPct}%</div></div>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Section</th>
+            <th>Project # / SR #</th>
+            <th>Job #</th>
+            <th>Customer</th>
+            <th>Work Type</th>
+            <th>PM</th>
+            <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>${detailRows}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function exportCSV(){
+  if(allData.length === 0){ alert('Load timesheets first.'); return; }
+
+  const from = document.getElementById('date-from').value;
+  const to = document.getElementById('date-to').value;
+  const tech = document.getElementById('filter-tech').value;
+  let filtered = allData;
+  if(from) filtered = filtered.filter(t => t.week >= from);
+  if(to)   filtered = filtered.filter(t => t.week <= to);
+  if(tech) filtered = filtered.filter(t => t.tech === tech);
+
+  const rows = [['Tech','Week Ending','Section','Project # / SR #','Job #','Customer','Work Type','PM','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Total','ST','OT','PTO','Holiday','Bereavement','Per Diem','Billable %']];
+
+  filtered.forEach(t => {
+    if(t.rowDetail && t.rowDetail.length > 0){
+      t.rowDetail.forEach(r => {
+        rows.push([
+          t.tech, t.week, r.section, r.proj||'', r.job||'', r.customer||'', r.workType||'', r.pm||'',
+          ...DAYS.map(d => r.days&&r.days[d]?r.days[d]:''),
+          r.total||0, t.st, t.ot, t.ptoHrs, t.holHrs, t.brvHrs, t.perDiem,
+          (t.billPct<1?Math.round(t.billPct*100):Math.round(t.billPct))+'%'
+        ]);
+      });
+    } else {
+      rows.push([t.tech, t.week, '','','','','','', '','','','','','','', t.totalHrs, t.st, t.ot, t.ptoHrs, t.holHrs, t.brvHrs, t.perDiem, (t.billPct<1?Math.round(t.billPct*100):Math.round(t.billPct))+'%']);
+    }
+  });
+
+  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `PCTX_Payroll_${from}_to_${to}.csv`;
+  a.click();
+}
+</script>
+</body>
+</html>
