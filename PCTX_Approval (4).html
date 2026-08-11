@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCTX Field Service — Timesheet Approvals</title>
+<style>
+:root{
+  --green:#2D6A2D;--green-light:#EAF3DE;--green-mid:#639922;--green-dark:#27500A;
+  --blue:#185FA5;--blue-light:#E6F1FB;--blue-mid:#378ADD;--blue-dark:#0C447C;
+  --amber:#854F0B;--amber-light:#FAEEDA;--amber-mid:#EF9F27;
+  --red:#A32D2D;--red-light:#FCEBEB;
+  --border:#D3D1C7;--border-light:#E8E6DF;
+  --bg:#FAFAF8;--surface:#FFFFFF;--surface2:#F7F6F2;
+  --text:#1A1A18;--text2:#5F5E5A;--text3:#888780;
+  --radius:8px;--radius-lg:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;position:sticky;top:0;z-index:100}
+.nav-brand{font-size:13px;font-weight:600;padding:16px 0;margin-right:24px;letter-spacing:.02em}
+.nav-brand span{color:var(--green-mid)}
+.nav-tabs{display:flex}
+.nav-tab{padding:18px 15px;font-size:13px;cursor:pointer;border:none;background:transparent;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;font-family:inherit}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{color:var(--green-dark);border-bottom:2px solid var(--green-mid);font-weight:500}
+.notif-dot{display:inline-block;background:var(--red);color:#fff;border-radius:50%;font-size:10px;font-weight:700;width:16px;height:16px;line-height:16px;text-align:center;margin-left:4px;vertical-align:middle}
+.page{display:none;padding:24px;max-width:1100px;margin:0 auto}
+.page.active{display:block}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px}
+.card-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.card-sub{font-size:12px;color:var(--text3);margin-bottom:16px}
+.btn{padding:8px 18px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;cursor:pointer;background:var(--surface);color:var(--text);font-family:inherit;font-weight:500;transition:all .15s}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-approve{background:var(--green-dark);color:#fff;border-color:var(--green-dark)}
+.btn-approve:hover{opacity:.85}
+.btn-reject{background:var(--red);color:#fff;border-color:var(--red)}
+.btn-reject:hover{opacity:.85}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-pending{background:#FEF3C7;color:#92400E}
+.badge-pm{background:var(--blue-light);color:var(--blue-dark)}
+.badge-approved{background:var(--green-light);color:var(--green-dark)}
+.badge-rejected{background:var(--red-light);color:var(--red)}
+.empty{text-align:center;color:var(--text3);padding:40px 0;font-size:13px}
+.loading{text-align:center;color:var(--text3);padding:40px 0;font-size:13px}
+.ts-card{border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:16px;overflow:hidden}
+.ts-card-header{background:var(--surface2);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-light)}
+.ts-card-header.pending-pm{border-left:4px solid var(--amber-mid)}
+.ts-card-header.pending-manager{border-left:4px solid var(--blue-mid)}
+.ts-card-header.approved{border-left:4px solid var(--green-mid)}
+.ts-card-header.rejected{border-left:4px solid var(--red)}
+.ts-name{font-size:15px;font-weight:600}
+.ts-meta{font-size:12px;color:var(--text3);margin-top:2px}
+.ts-body{padding:18px}
+.ts-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.ts-stat{background:var(--surface2);border-radius:var(--radius);padding:10px 14px}
+.ts-stat-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:2px}
+.ts-stat-value{font-size:18px;font-weight:700;color:var(--text)}
+.ts-stat-sub{font-size:11px;color:var(--text3)}
+.ts-detail-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px}
+.ts-detail-table th{background:var(--surface2);padding:7px 10px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--text2);border-bottom:1px solid var(--border)}
+.ts-detail-table td{padding:7px 10px;border-bottom:1px solid var(--border-light);color:var(--text)}
+.ts-detail-table tr:last-child td{border-bottom:none}
+.ts-actions{display:flex;gap:10px;align-items:center;padding-top:14px;border-top:1px solid var(--border-light)}
+.ts-sig{font-size:12px;color:var(--text3);margin-left:auto;font-style:italic}
+.alert{padding:12px 16px;border-radius:var(--radius);font-size:13px;margin-bottom:16px;border:1px solid}
+.alert-success{background:var(--green-light);color:var(--green-dark);border-color:#97C459}
+.alert-error{background:var(--red-light);color:var(--red);border-color:#E8AAAA}
+.login-wrap{max-width:440px;margin:80px auto;padding:0 24px}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px}
+.login-title{font-size:18px;font-weight:700;margin-bottom:4px}
+.login-sub{font-size:13px;color:var(--text3);margin-bottom:24px}
+label{display:block;font-size:11px;font-weight:500;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text);background:var(--surface);font-family:inherit}
+input:focus,select:focus{outline:none;border-color:var(--green-mid)}
+.fld{margin-bottom:14px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--green-mid);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:700px){.ts-grid{grid-template-columns:1fr 1fr}.nav-tab{padding:14px 8px;font-size:12px}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-wrap">
+    <div style="font-size:13px;font-weight:600;margin-bottom:24px"><span style="color:var(--green-mid)">PCTX</span> Field Service</div>
+    <div class="login-card">
+      <div class="login-title">Timesheet Approvals</div>
+      <div class="login-sub">Select your name to view and approve timesheets assigned to you.</div>
+      <div class="fld">
+        <label>Your name</label>
+        <select id="login-name">
+          <option value="">Select your name...</option>
+          <optgroup label="Project Managers">
+            <option value="Andres Catacoly" data-role="pm">Andres Catacoly</option>
+            <option value="Mike Nguyen" data-role="pm">Mike Nguyen</option>
+            <option value="Savannah Prado" data-role="pm">Savannah Prado</option>
+            <option value="Rick Kelsey" data-role="pm">Rick Kelsey</option>
+            <option value="Alejandra Walding" data-role="pm">Alejandra Walding</option>
+          </optgroup>
+          <optgroup label="Service Manager">
+            <option value="Jessie Lozano" data-role="manager">Jessie Lozano</option>
+          </optgroup>
+        </select>
+      </div>
+      <button class="btn btn-approve" style="width:100%;padding:10px" onclick="doLogin()">View my approvals</button>
+      <div id="login-error" style="color:var(--red);font-size:12px;margin-top:10px;display:none">Please select your name.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP (hidden until login) -->
+<div id="main-app" style="display:none">
+  <div class="nav">
+    <div class="nav-brand"><span>PCTX</span> Field Service</div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showTab('pending')">
+        Pending Approval <span class="notif-dot" id="pending-count" style="display:none">0</span>
+      </button>
+      <button class="nav-tab" onclick="showTab('history')">History</button>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:12px">
+      <span style="font-size:12px;color:var(--text3)" id="logged-in-as"></span>
+      <button class="btn btn-sm" onclick="doLogout()">Switch user</button>
+      <button class="btn btn-sm" onclick="loadTimesheets()">↻ Refresh</button>
+    </div>
+  </div>
+
+  <div class="page active" id="tab-pending" style="display:block">
+    <div id="alert-area"></div>
+    <div id="pending-list"><div class="loading"><span class="spinner"></span>Loading timesheets...</div></div>
+  </div>
+
+  <div class="page" id="tab-history">
+    <div id="history-list"><div class="loading"><span class="spinner"></span>Loading history...</div></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// FLOW URLS
+// ═══════════════════════════════════════════════════════
+const GET_FLOW    = 'https://defaultb0b4a7882bce4878b51340d63c996b.35.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/29/workflows/1e23ff49b3e04c73baea2b66c3faccde/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=84bPRyWOpGQfOzGNGLi02HURFfkdYYzHM_4gJDIWN_s';
+const UPDATE_FLOW = 'https://defaultb0b4a7882bce4878b51340d63c996b.35.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/02/workflows/b57fe85c734c4c50ac138d1768d941e2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2xwJe8EkJQl9q42cP9jJx9rIuiNfwHMpfhlJKrkjvis';
+const EMAIL_FLOW  = 'https://defaultb0b4a7882bce4878b51340d63c996b.35.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/14/workflows/a65c9723f4cc4b4e82824c57a520c244/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=83LC6pZHJCu6ZKFiGsH1DiqyLNCHbYR91n6nLUWBNKA';
+
+const SERVICE_MANAGER = 'Jessie Lozano';
+const SERVICE_MANAGER_EMAIL = 'jessie.lozano@pctx.us';
+const PAYROLL_EMAIL = 'kathy.sanchez@pctx.us';
+const PM_EMAILS = {
+  'Andres Catacoly':  'Andres.catacoly@pctx.us',
+  'Mike Nguyen':      'mike.nguyen@pctx.us',
+  'Jessie Lozano':    'jessie.lozano@pctx.us',
+  'Savannah Prado':   'savannah.prado@pctx.us',
+  'Rick Kelsey':      'rick.kelsey@pctx.us',
+  'Alejandra Walding':'alejandra.walding@pctx.us'
+};
+
+let currentUser = '';
+let currentRole = '';
+let allTimesheets = [];
+
+// ─── LOGIN ───────────────────────────────────────────
+function doLogin(){
+  const sel = document.getElementById('login-name');
+  const name = sel.value;
+  if(!name){ document.getElementById('login-error').style.display='block'; return; }
+  const opt = sel.options[sel.selectedIndex];
+  currentUser = name;
+  currentRole = opt.getAttribute('data-role');
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  document.getElementById('logged-in-as').textContent = currentUser + (currentRole==='manager'?' — Service Manager':' — PM');
+  loadTimesheets();
+}
+
+function doLogout(){
+  currentUser = ''; currentRole = '';
+  document.getElementById('login-screen').style.display = 'block';
+  document.getElementById('main-app').style.display = 'none';
+  document.getElementById('login-name').value = '';
+}
+
+function showTab(t){
+  document.querySelectorAll('.nav-tab').forEach((b,i)=>b.classList.toggle('active',i===(t==='pending'?0:1)));
+  document.getElementById('tab-pending').style.display = t==='pending'?'block':'none';
+  document.getElementById('tab-history').style.display = t==='history'?'block':'none';
+}
+
+// ─── LOAD TIMESHEETS ─────────────────────────────────
+async function loadTimesheets(){
+  document.getElementById('pending-list').innerHTML = '<div class="loading"><span class="spinner"></span>Loading timesheets from SharePoint...</div>';
+  document.getElementById('history-list').innerHTML = '<div class="loading"><span class="spinner"></span>Loading history...</div>';
+
+  try {
+    // Fetch all timesheets — we filter client-side so PM sees only their rows
+    console.log('Fetching timesheets from Flow...');
+    const res = await fetch(GET_FLOW, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({status: '', pm: currentUser})
+    });
+    console.log('Response status:', res.status, '| type:', res.type);
+    const text = await res.text();
+    console.log('Raw response:', text.slice(0, 1000));
+    let data;
+    try { data = JSON.parse(text); } catch(pe){ throw new Error('Invalid JSON: '+text.slice(0,200)); }
+    const items = Array.isArray(data) ? data : (data.value || []);
+    console.log('Items loaded:', items.length);
+    allTimesheets = items.map(item => ({
+      id:          item.id,
+      tech:        item.Tech || '',
+      week:        item.WeekEnding || '',
+      billHrs:     item.BillHrs || 0,
+      utilHrs:     item.UtilHrs || 0,
+      nonBillHrs:  item.NonBillHrs || 0,
+      st:          item.ST || 0,
+      ot:          item.OT || 0,
+      ptoHrs:      item.PTOHrs || 0,
+      holHrs:      item.HOLHrs || 0,
+      brvHrs:      item.BRVHrs || 0,
+      totalHrs:    item.TotalHrs || 0,
+      perDiem:     item.PerDiem || '$0.00',
+      billPct:     item.BillPct || 0,
+      combPct:     item.CombUtilPct || 0,
+      pm:          item.PM || '',
+      techSig:     item.TechSig || '',
+      mgrSig:      item.MgrSig || '',
+      submitted:   item.Submitted || '',
+      status:      item.Status || 'pending_pm',
+      pmApproval:  item.PMApproval || '',
+      mgrApproval: item.MgrApproval || '',
+      rejectReason:item.RejectReason || ''
+    }));
+    renderPending();
+    renderHistory();
+  } catch(e) {
+    console.error('Load error:', e);
+    document.getElementById('pending-list').innerHTML = `<div class="alert alert-error">Could not load timesheets from SharePoint. Error: ${e.message}<br><br>Make sure your Power Automate Get Timesheets flow is turned on and returning data.</div>`;
+  }
+}
+
+// ─── RENDER PENDING ───────────────────────────────────
+function renderPending(){
+  let pending;
+  if(currentRole === 'manager'){
+    pending = allTimesheets.filter(t => t.status === 'Pending Manager' || t.status === 'pending_manager');
+  } else {
+    pending = allTimesheets.filter(t =>
+      (t.status === 'Pending PM' || t.status === 'pending_pm') &&
+      t.pm && t.pm.includes(currentUser)
+    );
+  }
+
+  const dot = document.getElementById('pending-count');
+  dot.textContent = pending.length;
+  dot.style.display = pending.length > 0 ? 'inline-block' : 'none';
+
+  if(pending.length === 0){
+    document.getElementById('pending-list').innerHTML = '<div class="empty">✓ No timesheets pending your approval.</div>';
+    return;
+  }
+
+  document.getElementById('pending-list').innerHTML = pending.map(t => tsCard(t, true)).join('');
+}
+
+// ─── RENDER HISTORY ───────────────────────────────────
+function renderHistory(){
+  let history;
+  if(currentRole === 'manager'){
+    history = allTimesheets.filter(t => t.status === 'Approved' || t.status === 'approved' || t.status === 'Rejected' || t.status?.includes('reject'));
+  } else {
+    history = allTimesheets.filter(t =>
+      t.pm && t.pm.includes(currentUser) &&
+      t.status !== 'Pending PM' && t.status !== 'pending_pm'
+    );
+  }
+
+  if(history.length === 0){
+    document.getElementById('history-list').innerHTML = '<div class="empty">No approval history yet.</div>';
+    return;
+  }
+  document.getElementById('history-list').innerHTML = history.slice().reverse().map(t => tsCard(t, false)).join('');
+}
+
+// ─── TIMESHEET CARD ───────────────────────────────────
+function tsCard(t, showActions){
+  const statusClass = (t.status||'').toLowerCase().replace(/ /g,'_').replace('pending_pm','pending-pm').replace('pending_manager','pending-manager');
+  const statusBadge = statusBadgeHtml(t.status);
+  const billPctDisplay = t.billPct ? (t.billPct < 1 ? Math.round(t.billPct*100)+'%' : Math.round(t.billPct)+'%') : '0%';
+  const combPctDisplay = t.combPct ? (t.combPct < 1 ? Math.round(t.combPct*100)+'%' : Math.round(t.combPct)+'%') : '0%';
+  const submittedDate = t.submitted ? new Date(t.submitted).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}) : '—';
+
+  const actionButtons = showActions ? `
+    <div class="ts-actions">
+      <button class="btn btn-approve" onclick="approve(${t.id},'${escJs(t.tech)}','${escJs(t.week)}','${escJs(t.pm)}')">✓ Approve</button>
+      <button class="btn btn-reject" onclick="reject(${t.id},'${escJs(t.tech)}','${escJs(t.week)}','${escJs(t.pm)}')">✗ Reject</button>
+      <div class="ts-sig">Certified by: ${t.techSig}</div>
+    </div>` : `
+    <div class="ts-actions">
+      ${t.rejectReason ? `<div style="font-size:12px;color:var(--red)">Rejection reason: ${t.rejectReason}</div>` : ''}
+      <div class="ts-sig">${t.pmApproval ? 'PM approved by: '+t.pmApproval : ''} ${t.mgrApproval ? '· Final approval: '+t.mgrApproval : ''}</div>
+    </div>`;
+
+  return `
+  <div class="ts-card">
+    <div class="ts-card-header ${statusClass}">
+      <div>
+        <div class="ts-name">${t.tech} &nbsp; ${statusBadge}</div>
+        <div class="ts-meta">Week ending: ${t.week} &nbsp;·&nbsp; PM: ${t.pm} &nbsp;·&nbsp; Submitted: ${submittedDate}</div>
+      </div>
+    </div>
+    <div class="ts-body">
+      <div class="ts-grid">
+        <div class="ts-stat">
+          <div class="ts-stat-label">ST Hours</div>
+          <div class="ts-stat-value">${parseFloat(t.st||0).toFixed(1)}</div>
+        </div>
+        <div class="ts-stat">
+          <div class="ts-stat-label">OT Hours</div>
+          <div class="ts-stat-value">${parseFloat(t.ot||0).toFixed(1)}</div>
+        </div>
+        <div class="ts-stat">
+          <div class="ts-stat-label">Total Hours</div>
+          <div class="ts-stat-value">${parseFloat(t.totalHrs||0).toFixed(1)}</div>
+        </div>
+        <div class="ts-stat">
+          <div class="ts-stat-label">Per Diem</div>
+          <div class="ts-stat-value" style="font-size:15px">${t.perDiem||'$0.00'}</div>
+        </div>
+      </div>
+      <table class="ts-detail-table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Hours</th>
+            <th>% of Week</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Billable</td><td>${parseFloat(t.billHrs||0).toFixed(1)}</td><td>${billPctDisplay}</td></tr>
+          <tr><td>Utilized (internal)</td><td>${parseFloat(t.utilHrs||0).toFixed(1)}</td><td>${combPctDisplay}</td></tr>
+          <tr><td>PTO / Vacation</td><td>${parseFloat(t.ptoHrs||0).toFixed(1)}</td><td>—</td></tr>
+          <tr><td>Holiday</td><td>${parseFloat(t.holHrs||0).toFixed(1)}</td><td>—</td></tr>
+          <tr><td>Bereavement</td><td>${parseFloat(t.brvHrs||0).toFixed(1)}</td><td>—</td></tr>
+          <tr style="font-weight:600"><td>Total</td><td>${parseFloat(t.totalHrs||0).toFixed(1)}</td><td>—</td></tr>
+        </tbody>
+      </table>
+      ${actionButtons}
+    </div>
+  </div>`;
+}
+
+function statusBadgeHtml(s){
+  const map = {
+    'pending_pm':'<span class="badge badge-pending">Pending PM</span>',
+    'Pending PM':'<span class="badge badge-pending">Pending PM</span>',
+    'pending_manager':'<span class="badge badge-pm">Pending Manager</span>',
+    'Pending Manager':'<span class="badge badge-pm">Pending Manager</span>',
+    'approved':'<span class="badge badge-approved">✓ Approved</span>',
+    'Approved':'<span class="badge badge-approved">✓ Approved</span>',
+    'rejected_by_pm':'<span class="badge badge-rejected">✗ Rejected</span>',
+    'rejected_by_manager':'<span class="badge badge-rejected">✗ Rejected</span>',
+    'Rejected':'<span class="badge badge-rejected">✗ Rejected</span>'
+  };
+  return map[s] || `<span class="badge badge-pending">${s||'Pending'}</span>`;
+}
+
+function escJs(s){ return (s||'').replace(/'/g,"\\'"); }
+
+// ─── APPROVE ─────────────────────────────────────────
+async function approve(id, tech, week, pm){
+  if(!confirm(`Approve timesheet for ${tech} (week ending ${week})?`)) return;
+  showAlert('Processing...', false);
+
+  const newStatus = currentRole === 'manager' ? 'Approved' : 'Pending Manager';
+
+  try {
+    await fetch(UPDATE_FLOW, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        id,
+        status: newStatus,
+        rejectReason: '',
+        approvedBy: currentUser
+      })
+    });
+
+    // Send next notification email
+    if(currentRole === 'manager'){
+      // Notify Kathy for payroll
+      await sendEmail({
+        to: PAYROLL_EMAIL,
+        cc: SERVICE_MANAGER_EMAIL,
+        subject: `[PCTX] Timesheet approved — process payroll for ${tech}, week of ${week}`,
+        body: `Hi Kathy,\n\nThe timesheet for ${tech} (week ending ${week}) has been fully approved by ${currentUser} and is ready to process for payroll.\n\nPlease process at your earliest convenience.\n\nThank you.`
+      });
+      showAlert(`✓ Final approval complete. Kathy Sanchez has been notified to process payroll for ${tech}.`, true);
+    } else {
+      // Notify Jessie for final approval
+      await sendEmail({
+        to: SERVICE_MANAGER_EMAIL,
+        cc: '',
+        subject: `[PCTX] Timesheet ready for final approval — ${tech}, week of ${week}`,
+        body: `Hi ${SERVICE_MANAGER},\n\n${currentUser} has approved the timesheet for ${tech} (week ending ${week}). It is now ready for your final sign-off.\n\nClick here to review and approve:\nhttps://jlozano60.github.io/pctx-timesheet/PCTX_Approval.html\n\nThank you.`
+      });
+      showAlert(`✓ Approved. ${SERVICE_MANAGER} has been notified for final sign-off.`, true);
+    }
+
+    setTimeout(()=>loadTimesheets(), 1500);
+  } catch(e){
+    showAlert('Error: ' + e.message, false);
+  }
+}
+
+// ─── REJECT ──────────────────────────────────────────
+async function reject(id, tech, week, pm){
+  const reason = prompt(`Reason for rejecting ${tech}'s timesheet (week ${week}):\nThis will be sent back to the tech to correct and resubmit.`);
+  if(reason === null) return;
+  if(!reason.trim()){ alert('Please enter a reason for rejection.'); return; }
+
+  showAlert('Processing...', false);
+
+  try {
+    await fetch(UPDATE_FLOW, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        id,
+        status: 'Rejected',
+        rejectReason: `Rejected by ${currentUser}: ${reason}`,
+        approvedBy: ''
+      })
+    });
+
+    // Notify all PMs on the timesheet and Jessie
+    const pmList = (pm||'').split(', ').filter(Boolean);
+    for(const pmName of pmList){
+      const pmEmail = PM_EMAILS[pmName];
+      if(pmEmail){
+        await sendEmail({
+          to: pmEmail,
+          cc: SERVICE_MANAGER_EMAIL,
+          subject: `[PCTX] Timesheet rejected — ${tech}, week of ${week}`,
+          body: `Hi ${pmName},\n\n${currentUser} has rejected the timesheet for ${tech} (week ending ${week}) and returned it for correction.\n\nReason: ${reason}\n\nPlease work with the tech to correct and resubmit.\n\nThank you.`
+        });
+      }
+    }
+
+    showAlert(`✗ Rejected. The PM(s) have been notified to work with ${tech} to correct and resubmit.`, false);
+    setTimeout(()=>loadTimesheets(), 1500);
+  } catch(e){
+    showAlert('Error: ' + e.message, false);
+  }
+}
+
+// ─── SEND EMAIL ──────────────────────────────────────
+async function sendEmail({to, cc, subject, body}){
+  return fetch(EMAIL_FLOW, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({to, cc, subject, body})
+  });
+}
+
+// ─── ALERT ───────────────────────────────────────────
+function showAlert(msg, success){
+  const el = document.getElementById('alert-area');
+  el.innerHTML = `<div class="alert ${success?'alert-success':'alert-error'}">${msg}</div>`;
+  if(success) setTimeout(()=>el.innerHTML='', 5000);
+}
+</script>
+</body>
+</html>
